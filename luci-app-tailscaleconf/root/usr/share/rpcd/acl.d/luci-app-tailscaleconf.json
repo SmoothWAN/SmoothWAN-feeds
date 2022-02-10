@@ -1,0 +1,11 @@
+{
+	"luci-app-tailscaleconf": {
+		"description": "Grant UCI access for luci-app-tailconf",
+		"read": {
+			"uci": [ "tailconf" ]
+		},
+		"write": {
+			"uci": [ "tailconf" ]
+		}
+	}
+}

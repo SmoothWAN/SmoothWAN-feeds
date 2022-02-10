@@ -1,0 +1,3 @@
+config config 'Setup'
+	option apt 'https://apt.connectify.me/'
+	option version '0'

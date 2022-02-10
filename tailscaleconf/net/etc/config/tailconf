@@ -1,0 +1,2 @@
+config config 'Setup'
+	option version '0'
