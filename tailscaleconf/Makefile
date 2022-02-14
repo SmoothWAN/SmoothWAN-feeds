@@ -37,6 +37,8 @@ endef
 define Package/tailscaleconf/install
 	$(INSTALL_DIR) $(1)/usr/lib/tailconf
 	$(INSTALL_BIN) ./net/usr/lib/tailconf/run.sh $(1)/usr/lib/tailconf/run.sh
+	$(INSTALL_DIR) $(1)/etc/config
+	$(INSTALL_DATA) ./net/etc/config/tailconf $(1)/etc/config/tailconf
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_DATA) ./net/etc/init.d/tailconf $(1)/etc/init.d/tailconf
 endef

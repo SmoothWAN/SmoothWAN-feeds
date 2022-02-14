@@ -1,12 +1,12 @@
 #Author: TALMASH
 
 include $(TOPDIR)/rules.mk
-PKG_NAME:=luci-app-tailscaleconf
-LUCI_Title:=Tailscale Setup and Configuration
+PKG_NAME:=luci-app-wifibasic
+LUCI_Title:=Simplified WiFi configuration
 LUCI_PKGARCH:=all
-LUCI_DEPENDS:=+tailscaleconf +libuci
-PKG_VERSION:=1.0
-PKG_RELEASE:=1.0
+LUCI_DEPENDS:= +libuci
+PKG_VERSION:=0.1
+PKG_RELEASE:=0.1
 
 PKG_MAINTANINER:=TALMASH
 PKG_LICENSE:=BSD
