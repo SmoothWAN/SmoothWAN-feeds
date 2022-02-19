@@ -9,7 +9,7 @@ PKG_VERSION:=1.3.33
 
 LUCI_TITLE:=VPN Bypass Web UI modified for MultiWAN
 LUCI_DESCRIPTION:=Provides Web UI for VPNBypass service.
-LUCI_DEPENDS:=+luci-mod-admin-full +vpnbypasmwan
+LUCI_DEPENDS:=+luci-mod-admin-full +vpnbypassmwan
 LUCI_PKGARCH:=all
 
 include $(TOPDIR)/feeds/luci/luci.mk

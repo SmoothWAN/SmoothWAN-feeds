@@ -4,7 +4,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=vpnbypassmwan
-PKG_VERSION:=1.3.33
+PKG_VERSION:=1.3.33-1
 PKG_RELEASE:=1
 PKG_LICENSE:=GPL-3.0-or-later
 PKG_MAINTAINER:=Stan Grishin <stangri@melmac.ca>
@@ -43,7 +43,7 @@ define Package/vpnbypassmwan/install
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_DIR) $(1)/etc/hotplug.d/firewall
-	$(INSTALL_BIN) ./files/vpnbypassmwan.init $(1)/etc/init.d/vpnbypass
+	$(INSTALL_BIN) ./files/vpnbypassmwan.init $(1)/etc/init.d/vpnbypassmwan
 	$(SED) "s|^\(PKG_VERSION\).*|\1='$(PKG_VERSION)-$(PKG_RELEASE)'|" $(1)/etc/init.d/vpnbypassmwan
 	$(INSTALL_CONF) ./files/vpnbypassmwan.config $(1)/etc/config/vpnbypassmwan
 	$(INSTALL_DATA) ./files/vpnbypassmwan.hotplug $(1)/etc/hotplug.d/firewall/94-vpnbypassmwan
