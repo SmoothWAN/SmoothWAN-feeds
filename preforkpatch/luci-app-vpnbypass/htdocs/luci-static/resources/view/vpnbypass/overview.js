@@ -5,12 +5,12 @@
 'require form';
 'require uci';
 'require view';
-'require vpnbypassmwan.widgets as widgets';
+'require vpnbypass.widgets as widgets';
 'require tools.widgets as owrtwidgets';
 
 
 var pkg = {
-	get Name() { return 'vpnbypassmwan'; },
+	get Name() { return 'vpnbypass'; },
 	get URL() { return 'https://docs.openwrt.melmac.net/' + pkg.Name + '/'; }
 };
 
@@ -26,7 +26,7 @@ return view.extend({
 
 		var m, d, s, o;
 
-		m = new form.Map(pkg.Name, _('VPN Bypass Multi-WAN'));
+		m = new form.Map(pkg.Name, _('VPN Bypass'));
 
 		s = m.section(form.NamedSection, 'config', pkg.Name);
 

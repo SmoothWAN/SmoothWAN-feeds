@@ -16,7 +16,7 @@ function index()
 end
 
 function spdconflog()
-    local logfile = fs.readfile("/usr/lib/speedifyconf/speedifyconfig.log") or ""
+    local logfile = fs.readfile("/usr/share/speedifyconfig.log") or ""
     template.render("speedifyconf/file_viewer",
         {title = i18n.translate("Install/Service Script Log"), content = logfile})
 end

@@ -5,7 +5,7 @@
 'require form';
 
 var pkg = {
-	get Name() { return 'vpnbypassmwan'; }
+	get Name() { return 'vpnbypass'; }
 };
 
 var _getInitList = rpc.declare({

@@ -3,25 +3,24 @@
 
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=vpnbypassmwan
-PKG_VERSION:=1.3.33-1
+PKG_NAME:=vpnbypass
+PKG_VERSION:=1.3.4
 PKG_RELEASE:=1
 PKG_LICENSE:=GPL-3.0-or-later
 PKG_MAINTAINER:=Stan Grishin <stangri@melmac.ca>
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/vpnbypassmwan
+define Package/vpnbypass
 	SECTION:=net
 	CATEGORY:=Network
-	TITLE:=VPN Bypass Service with MultiWAN Support
+	TITLE:=VPN Bypass Service MultiWAN Patch
 	URL:=https://docs.openwrt.melmac.net/vpnbypass/
 	DEPENDS:=+ipset +iptables
 	PKGARCH:=all
 endef
 
-define Package/vpnbypassmwan/description
-!MODIFIED for Multi-WAN!
+define Package/vpnbypass/description
 This service can be used to enable simple VPN split tunnelling.
 Supports accessing domains, IP ranges outside of your VPN tunnel.
 Also supports dedicating local ports/IP ranges for direct
@@ -29,8 +28,8 @@ internet access (outside of your VPN tunnel).
 Please see the README for further information.
 endef
 
-define Package/vpnbypassmwan/conffiles
-/etc/config/vpnbypassmwan
+define Package/vpnbypass/conffiles
+/etc/config/vpnbypass
 endef
 
 define Build/Configure
@@ -39,34 +38,34 @@ endef
 define Build/Compile
 endef
 
-define Package/vpnbypassmwan/install
+define Package/vpnbypass/install
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_DIR) $(1)/etc/hotplug.d/firewall
-	$(INSTALL_BIN) ./files/vpnbypassmwan.init $(1)/etc/init.d/vpnbypassmwan
-	$(SED) "s|^\(PKG_VERSION\).*|\1='$(PKG_VERSION)-$(PKG_RELEASE)'|" $(1)/etc/init.d/vpnbypassmwan
-	$(INSTALL_CONF) ./files/vpnbypassmwan.config $(1)/etc/config/vpnbypassmwan
-	$(INSTALL_DATA) ./files/vpnbypassmwan.hotplug $(1)/etc/hotplug.d/firewall/94-vpnbypassmwan
+	$(INSTALL_BIN) ./files/vpnbypass.init $(1)/etc/init.d/vpnbypass
+	$(SED) "s|^\(PKG_VERSION\).*|\1='$(PKG_VERSION)-$(PKG_RELEASE)'|" $(1)/etc/init.d/vpnbypass
+	$(INSTALL_CONF) ./files/vpnbypass.config $(1)/etc/config/vpnbypass
+	$(INSTALL_DATA) ./files/vpnbypass.hotplug $(1)/etc/hotplug.d/firewall/94-vpnbypass
 endef
 
-define Package/vpnbypassmwan/postinst
+define Package/vpnbypass/postinst
 	#!/bin/sh
 	# check if we are on real system
 	if [ -z "$${IPKG_INSTROOT}" ]; then
-		/etc/init.d/vpnbypassmwan enable
+		/etc/init.d/vpnbypass enable
 	fi
 	exit 0
 endef
 
-define Package/vpnbypassmwan/prerm
+define Package/vpnbypass/prerm
 	#!/bin/sh
 	# check if we are on real system
 	if [ -z "$${IPKG_INSTROOT}" ]; then
-		echo "Stopping service and removing rc.d symlink for vpnbypassmwan"
-		/etc/init.d/vpnbypassmwan stop || true
-		/etc/init.d/vpnbypassmwan disable || true
+		echo "Stopping service and removing rc.d symlink for vpnbypass"
+		/etc/init.d/vpnbypass stop || true
+		/etc/init.d/vpnbypass disable || true
 	fi
 	exit 0
 endef
 
-$(eval $(call BuildPackage,vpnbypassmwan))
+$(eval $(call BuildPackage,vpnbypass))
