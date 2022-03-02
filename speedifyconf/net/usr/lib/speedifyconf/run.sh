@@ -10,8 +10,11 @@ config_load speedifyconf
 run_speedify (){
    cd /usr/share/speedify || exit 1
    sh DisableRpFilter.sh 
-   mkdir -p logs
-   ./speedify -d logs &
+   mkdir -p /tmp/speedify/logs
+   rm -rf /tmp/speedify/logs/*
+   cp -rP /usr/share/speedify/logs/* /tmp/speedify/logs/
+   ./speedify -d /tmp/speedify/logs &
+   sh /usr/lib/speedifyconf/ramcopy.sh &
 }
 
 parse_apt_url(){

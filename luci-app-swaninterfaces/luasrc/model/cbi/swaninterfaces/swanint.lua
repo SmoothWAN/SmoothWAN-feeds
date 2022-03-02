@@ -61,6 +61,5 @@ function s.create(self, sid)
         return TypedSection.create(self, sid)
 end
 
-
 return m
 

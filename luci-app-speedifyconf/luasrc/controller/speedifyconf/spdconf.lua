@@ -11,7 +11,7 @@ function index()
      e.acl_depends = { "luci-app-speedifyconf" }
      e.dependent = false
      
-     entry({"admin", "vpn", "spdconf", "config"}, cbi("speedifyconf/spdconf"), _("Config"), 1)
+     entry({"admin", "vpn", "spdconf", "config"}, cbi("speedifyconf/spdconf"), _("Configuration"), 1)
      entry({"admin", "vpn", "spdconf", "logs"}, call("spdconflog"), _("View Log"), 2)
 end
 
