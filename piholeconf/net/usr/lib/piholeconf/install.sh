@@ -8,9 +8,6 @@ config_load piholeconf
 
 setuplxc(){
 
-uci del dhcp.lan.dhcp_option
-uci add_list dhcp.lan.dhcp_option='6,192.168.3.3'
-uci commit dhcp
 
 lxc-create --name PiHole --template download -- --dist debian --release bullseye --arch $ARCH --no-validate
 cp /usr/lib/piholeconf/config /srv/lxc/PiHole/config
@@ -27,6 +24,10 @@ uci add lxc-auto container
 uci set lxc-auto.@container[-1].name=PiHole
 uci set lxc-auto.@container[-1].timeout=30
 uci commit lxc-auto
+
+uci del dhcp.lan.dhcp_option
+uci add_list dhcp.lan.dhcp_option='6,192.168.3.3'
+uci commit dhcp
 
 }
 
