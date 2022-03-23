@@ -31,7 +31,7 @@ parse_pkg_url(){
 install_tailscale(){
   if [ "$(ping -q -c1 google.com &>/dev/null && echo 0 || echo 1)" = "1" ]; then
       echo "Internet connectivity issue. Stopping installation/update"
-      run_speedify
+      run_tailscale
       exit 0
   fi
 
