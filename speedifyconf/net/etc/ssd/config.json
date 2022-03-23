@@ -4,19 +4,15 @@
                 "dev":"/dev/i2c-1",
                 "addr":60
         },
-	"draw0":{
-		"seting":{
-			"cycle":1,"time":10,"page":1
-		},
-		"display":[
-			{"type":"r_rect", "x0":6, "y0":24, "w":35, "h":16, "r":8, "fill":0, "color":1, "en":1},
-			{"type":"r_rect", "x0":6, "y0":24, "w":25, "h":16, "r":8, "fill":0, "color":0, "en":1},
-			{"type":"r_rect", "x0":6, "y0":25, "w":35, "h":16, "r":8, "fill":0, "color":1, "en":1},
-			{"type":"r_rect", "x0":6, "y0":25, "w":25, "h":16, "r":8, "fill":0, "color":0, "en":1},
-	
-			{"type":"str","data":"-look","x0":45,"y0":25,"size":2,"color":1,"en":1}
-		]
-	},
+        "draw0":{
+                "seting":{
+                        "cycle":1,"time":30,"page":1
+                },
+                "display":[
+                        {"type":"str","data":"SmoothWAN","x0":10,"y0":25,"size":2,"color":1,"en":1},
+                        {"type":"str","data":"Loading...","x0":65,"y0":54,"size":1,"color":1,"en":1}
+                ]
+        },
         "draw1":{
                 "seting":{
                         "cycle":1,"time":0,"page":2

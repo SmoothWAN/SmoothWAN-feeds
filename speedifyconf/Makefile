@@ -2,8 +2,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=speedifyconf
-PKG_VERSION:=4.2
-PKG_RELEASE:=4.2
+PKG_VERSION:=4.3
+PKG_RELEASE:=4.3
 
 PKG_MAINTAINER:=TALMASH
 
