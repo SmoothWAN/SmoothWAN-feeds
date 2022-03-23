@@ -13,8 +13,16 @@ run_speedify (){
    mkdir -p /tmp/speedify/logs
    rm -rf /tmp/speedify/logs/*
    cp -rP /usr/share/speedify/logs/* /tmp/speedify/logs/
+   killall speedify 2> /dev/null
    ./speedify -d /tmp/speedify/logs &
+   sleep 3
    sh /usr/lib/speedifyconf/ramcopy.sh &
+   #OLED-SSD1306 status display (crude workaround for now)
+   sh /usr/lib/speedifyconf/rotatelog.sh &
+   sleep 1
+   cd /etc/ssd || exit 1
+   killall ssd 2> /dev/null
+   nice -n100 ssd -c config.json > /dev/null &
 }
 
 parse_apt_url(){
