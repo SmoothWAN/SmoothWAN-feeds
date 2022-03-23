@@ -2,8 +2,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=speedifyconf
-PKG_VERSION:=4.3
-PKG_RELEASE:=4.3
+PKG_VERSION:=4.2
+PKG_RELEASE:=4.2
 
 PKG_MAINTAINER:=TALMASH
 
@@ -38,8 +38,11 @@ define Package/speedifyconf/install
 	$(INSTALL_DIR) $(1)/usr/lib/speedifyconf
 	$(INSTALL_BIN) ./net/usr/lib/speedifyconf/run.sh $(1)/usr/lib/speedifyconf/run.sh
 	$(INSTALL_BIN) ./net/usr/lib/speedifyconf/ramcopy.sh $(1)/usr/lib/speedifyconf/ramcopy.sh
+	$(INSTALL_BIN) ./net/usr/lib/speedifyconf/rotatelog.sh $(1)/usr/lib/speedifyconf/rotatelog.sh
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_DATA) ./net/etc/config/speedifyconf $(1)/etc/config/speedifyconf
+	$(INSTALL_DIR) $(1)/etc
+	$(CP) ./net/etc/ssd $(1)/etc/ssd
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_DATA) ./net/etc/init.d/speedifyconf $(1)/etc/init.d/speedifyconf
 endef
