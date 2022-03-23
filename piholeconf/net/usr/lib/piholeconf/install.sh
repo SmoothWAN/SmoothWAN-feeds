@@ -26,7 +26,7 @@ uci set lxc-auto.@container[-1].timeout=30
 uci commit lxc-auto
 
 uci del dhcp.lan.dhcp_option
-uci add_list dhcp.lan.dhcp_option='6,192.168.3.3'
+uci add_list dhcp.lan.dhcp_option='6,172.17.17.3'
 uci commit dhcp
 
 }

@@ -20,5 +20,5 @@ lxc.net.0.type = veth
 lxc.net.0.link = br-lan
 lxc.net.0.flags = up
 lxc.net.0.hwaddr = 00:DD:DD:DD:DD:00
-lxc.net.0.ipv4.address = 192.168.3.3/24
-lxc.net.0.ipv4.gateway = 192.168.3.1
+lxc.net.0.ipv4.address = 172.17.17.3/24
+lxc.net.0.ipv4.gateway = 172.17.17.2

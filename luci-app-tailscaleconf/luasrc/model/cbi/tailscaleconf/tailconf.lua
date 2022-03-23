@@ -2,7 +2,7 @@ config = Map("tailconf")
 
 view = config:section(NamedSection,"Setup", "config",  translate("Tailscale Configuration"), translate("Check the log tab for installation progress."))
 auto = view:option(Flag, "autoupdate", "Update on boot:", "Updates Tailscale before starting."); view.optional=false; view.rmempty = false;
-upd = view:option(Button, "_update", "Trigger Install/Update", "Setup page: <a href='http://192.168.3.1:8088' target='_blank'>http://192.168.3.1:8088</a>");
+upd = view:option(Button, "_update", "Trigger Install/Update", "Setup page: <a href='http://172.17.17.2:8088' target='_blank'>http://172.17.17.2:8088</a>");
 uni = view:option(Button, "_uninstall", "Trigger Uninstall", "Uninstalls Tailscale");
 
 function upd.write()
