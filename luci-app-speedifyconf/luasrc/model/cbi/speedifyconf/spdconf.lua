@@ -11,7 +11,7 @@ function upd.write()
 end
 
 function rst.write()
-  luci.sys.call("killall -KILL speedify && rm -rf /usr/share/speedify/logs && rm -rf /tmp/speedify/logs/* && sh /usr/lib/speedifyconf/run.sh >> /usr/share/speedifyconfig.log &")
+  luci.sys.call("killall -KILL speedify && rm -rf /tmp/speedify/logs/* && rm -rf /usr/share/speedify/logs/* && sh /usr/lib/speedifyconf/run.sh >> /usr/share/speedifyconfig.log &")
 end
 
 return config
