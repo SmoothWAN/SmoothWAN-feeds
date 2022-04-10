@@ -34,6 +34,7 @@ uci commit lxc-auto
 uci del dhcp.lan.dhcp_option
 uci add_list dhcp.lan.dhcp_option='6,172.17.17.3'
 uci commit dhcp
+/etc/init.d/dnsmasq restart
 
 }
 
