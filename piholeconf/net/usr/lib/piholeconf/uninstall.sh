@@ -10,4 +10,5 @@ lxc-destroy PiHole
 uci del lxc-auto container
 uci commit lxc-auto
 
-echo "Uninstallation finished."
+echo "Uninstallation finished. Restarting network interfaces."
+/etc/init.d/network restart
