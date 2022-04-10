@@ -11,13 +11,15 @@ setuplxc(){
 
 lxc-create --name PiHole --template download -- --dist debian --release bullseye --arch $ARCH --no-validate
 cp /usr/lib/piholeconf/config /srv/lxc/PiHole/config
-echo "nameserver 8.8.8.8" > /srv/lxc/PiHole/rootfs/etc/resolv.conf 
 rm /srv/lxc/PiHole/rootfs/etc/network/interfaces
 lxc-start PiHole
+lxc-attach -n PiHole -- bash -c "echo 'nameserver 8.8.8.8' >> /etc/resolv.conf"
 lxc-attach -n PiHole -- bash -c "mkdir -p /etc/pihole"
 cat /usr/lib/piholeconf/setupVars.conf | lxc-attach -n PiHole -- tee /etc/pihole/setupVars.conf
+sleep 10 #delay for dnsmasq lxc internal delay
 lxc-attach -n PiHole -- bash -c "apt update && apt install -y curl && curl -L https://install.pi-hole.net | bash /dev/stdin --unattended" &&
 lxc-attach -n PiHole -- bash -c "/usr/local/bin/pihole -a -p $PASS"
+
 
 
 uci add lxc-auto container
