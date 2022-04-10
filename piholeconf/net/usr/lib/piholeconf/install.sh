@@ -13,10 +13,14 @@ lxc-create --name PiHole --template download -- --dist debian --release bullseye
 cp /usr/lib/piholeconf/config /srv/lxc/PiHole/config
 rm /srv/lxc/PiHole/rootfs/etc/network/interfaces
 lxc-start PiHole
-lxc-attach -n PiHole -- bash -c "echo 'nameserver 8.8.8.8' >> /etc/resolv.conf"
+lxc-attach -n PiHole -- bash -c "echo > /etc/systemd/network/eth0.network"
+lxc-stop PiHole
+#Install PiHole
+lxc-start PiHole
+lxc-attach -n PiHole -- bash -c "echo DNS=8.8.8.8 >> /etc/systemd/resolved.conf && systemctl restart systemd-resolved"
 lxc-attach -n PiHole -- bash -c "mkdir -p /etc/pihole"
 cat /usr/lib/piholeconf/setupVars.conf | lxc-attach -n PiHole -- tee /etc/pihole/setupVars.conf
-sleep 10 #delay for dnsmasq lxc internal delay
+sleep 10 #delay for dnsmasq host bug
 lxc-attach -n PiHole -- bash -c "apt update && apt install -y curl && curl -L https://install.pi-hole.net | bash /dev/stdin --unattended" &&
 lxc-attach -n PiHole -- bash -c "/usr/local/bin/pihole -a -p $PASS"
 
