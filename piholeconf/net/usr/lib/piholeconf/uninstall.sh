@@ -11,3 +11,4 @@ uci del lxc-auto container
 uci commit lxc-auto
 
 echo "Uninstallation finished."
+/etc/init.d/dnsmasq restart
