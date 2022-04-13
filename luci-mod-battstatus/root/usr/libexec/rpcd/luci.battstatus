@@ -1,0 +1,29 @@
+#!/bin/sh
+
+. /usr/share/libubox/jshn.sh
+
+case "$1" in
+        list)
+                printf '{ "getBatteryStatus": {} }'
+        ;;
+        call)
+                case "$2" in
+                        getBatteryStatus)
+                                json_init
+                                eval $(/bin/ubus call system board 2>/dev/null | /usr/bin/jsonfilter -e 'MODEL=@.model')
+                                json_add_object "$MODEL"
+                                PERC="$(sh /etc/ssd/sh/bat.sh)"
+                                json_add_boolean valid 1
+                                if [[ $PERC != "CHG" ]]; then
+                                        json_add_boolean charging 0
+                                        json_add_int percentage ${PERC}
+                                else
+                                        json_add_boolean charging 1
+                                        json_add_init percentage CHG
+                                fi
+                                json_close_object
+                                json_dump
+                        ;;
+                esac
+        ;;
+esac
