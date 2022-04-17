@@ -10,13 +10,9 @@ config_load speedifyconf
 run_speedify (){
    cd /usr/share/speedify || exit 1
    sh DisableRpFilter.sh 
-   mkdir -p /tmp/speedify/logs
-   rm -rf /tmp/speedify/logs/*
-   cp -rP /usr/share/speedify/logs/* /tmp/speedify/logs/
-   killall speedify 2> /dev/null
-   ./speedify -d /tmp/speedify/logs &
-   sleep 3
-   sh /usr/lib/speedifyconf/ramcopy.sh &
+   mkdir -p logs
+   ./speedify -d logs &
+
    #OLED-SSD1306 status display (crude workaround for now)
    sh /usr/lib/speedifyconf/rotatelog.sh &
    sleep 1
