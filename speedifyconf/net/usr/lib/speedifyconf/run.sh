@@ -12,6 +12,8 @@ run_speedify (){
    sh DisableRpFilter.sh 
    mkdir -p logs
    ./speedify -d logs &
+   sleep 2
+   ./speedify_cli startupconnect on
 
    #OLED-SSD1306 status display (crude workaround for now)
    sh /usr/lib/speedifyconf/rotatelog.sh &

@@ -21,7 +21,7 @@ lxc-attach -n PiHole -- bash -c "echo DNS=8.8.8.8 >> /etc/systemd/resolved.conf 
 lxc-attach -n PiHole -- bash -c "mkdir -p /etc/pihole"
 cat /usr/lib/piholeconf/setupVars.conf | lxc-attach -n PiHole -- tee /etc/pihole/setupVars.conf
 sleep 10 #delay for dnsmasq host bug
-lxc-attach -n PiHole -- bash -c "apt update && apt install -y curl && curl -L https://install.pi-hole.net | bash /dev/stdin --unattended" &&
+lxc-attach -n PiHole -- bash -c "apt update && apt install -y curl && curl -L https://install.pi-hole.net | bash /dev/stdin --unattended"
 lxc-attach -n PiHole -- bash -c "/usr/local/bin/pihole -a -p $PASS"
 
 
