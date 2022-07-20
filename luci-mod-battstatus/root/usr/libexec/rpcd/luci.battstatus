@@ -13,13 +13,17 @@ case "$1" in
                                 eval $(/bin/ubus call system board 2>/dev/null | /usr/bin/jsonfilter -e 'MODEL=@.model')
                                 json_add_object "$MODEL"
                                 PERC="$(sh /etc/ssd/sh/bat.sh)"
-                                json_add_boolean valid 1
-                                if [[ $PERC != "CHG" ]]; then
-                                        json_add_boolean charging 0
-                                        json_add_int percentage ${PERC}
-                                else
-                                        json_add_boolean charging 1
-                                        json_add_init percentage CHG
+                                if [[ $PERC == "NC" ]]; then
+                                        json_add_boolean valid 0
+                                        elif [[ $PERC != "CHG" ]]; then
+                                                json_add_boolean charging 0
+                                                json_add_int percentage ${PERC}
+                                                json_add_boolean valid 1
+                                        else
+                                                json_add_boolean charging 1
+                                                json_add_init percentage CHG
+                                                json_add_boolean valid 1
+                                        fi
                                 fi
                                 json_close_object
                                 json_dump

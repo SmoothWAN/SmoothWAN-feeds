@@ -1,6 +1,11 @@
 #!/bin/sh
+INPUT="/sys/bus/i2c/devices/1-0042/hwmon/hwmon1/curr1_input"
+if [ ! -f "$INPUT" ]; then
+    echo NC
+    exit 0
+fi
 
-if [[ $(cat /sys/bus/i2c/devices/1-0042/hwmon/hwmon1/curr1_input | cut -b 1) != "-" ]]; then
+if [[ $(cat "$INPUT" | cut -b 1) != "-" ]]; then
         echo "CHG"
 else
         VC=$(cat /sys/bus/i2c/devices/1-0042/hwmon/hwmon1/in1_input)
