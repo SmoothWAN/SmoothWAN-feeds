@@ -8,7 +8,7 @@ config_load tailconf
 
 run_tailscale (){
   cd /usr/share/tailscale || exit 1
-  ./tailscaled -tun br-tailscale0 --state /usr/share/tailscale/tailscaled.state >/dev/null 2>&1 &
+  ./tailscaled -tun br-tailscale0 --state /usr/share/tailscale/tailscaled.state 2> /tmp/tailscaled.log &
   ./tailscale up --accept-dns=false --advertise-routes="172.17.17.0/24" --reset >/dev/null 2>&1 &
   ./tailscale web --listen=0.0.0.0:8088 &
 }
