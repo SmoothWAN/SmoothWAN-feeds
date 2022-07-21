@@ -1,2 +1,2 @@
-tac /tmp/spdstat.log | sed -n '/latencyMs/{nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn;p;q}' | grep 'latencyMs' | awk -F'[^0-9]*' '{printf "%s%.0f", $1, $2}' | cut -c 1-3
+tac /tmp/spdstat.log | sed -n '/latencyMs/{nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn;p;q}' | grep 'latencyMs' | awk -F'[^0-9]*' '{printf "%s%.0f", $1, $2}' | cut -c 1-3
 
