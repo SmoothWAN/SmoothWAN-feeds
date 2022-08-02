@@ -11,14 +11,14 @@ function index()
      e.acl_depends = { "luci-app-tailscaleconf" }
      e.dependent = false
      
-     entry({"admin", "vpn", "tailconf", "guide"}, call("guidehelp"), _("Guide"), 1)
+     entry({"admin", "vpn", "tailconf", "guide"}, call("guidehelp"), _("Guides"), 1)
      entry({"admin", "vpn", "tailconf", "config"}, cbi("tailscaleconf/tailconf"), _("Configuration"), 2)
      entry({"admin", "vpn", "tailconf", "logs"}, call("tailconflog"), _("View Log"), 3)
 end
 
 function guidehelp()
     template.render("tailscaleconf/guidehelp",
-        {title = i18n.translate("Quick Setup Guide")})
+        {title = i18n.translate("Quick Setup")})
 end
 
 function tailconflog()

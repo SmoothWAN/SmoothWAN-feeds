@@ -8,7 +8,9 @@ config_load piholeconf
 
 setuplxc(){
 
-
+sed -i "2s@.*@IPV4_ADDRESS=$IP/24@" /usr/lib/piholeconf/setupVars.conf
+sed -i "23s@.*@lxc.net.0.ipv4.address = $IP/24@" /usr/lib/piholeconf/config
+sed -i "24s@.*@lxc.net.0.ipv4.gateway = $GW@" /usr/lib/piholeconf/config
 lxc-create --name PiHole --template download -- --dist debian --release bullseye --arch $ARCH --no-validate
 cp /usr/lib/piholeconf/config /srv/lxc/PiHole/config
 rm /srv/lxc/PiHole/rootfs/etc/network/interfaces
@@ -32,20 +34,22 @@ uci set lxc-auto.@container[-1].timeout=30
 uci commit lxc-auto
 
 uci del dhcp.lan.dhcp_option
-uci add_list dhcp.lan.dhcp_option='6,172.17.17.3'
+eval uci add_list dhcp.lan.dhcp_option='6, $IP'
 uci commit dhcp
 /etc/init.d/dnsmasq restart
 
 }
 
-
-
-if [ $(uname -m) = "aarch64" ]; then 
+if [ $(uname -m) = "aarch64" ]; then
   ARCH=arm64
+  elif [ $(uname -m) = "x86_64" ]; then
+    ARCH=amd64
   else
-  ARCH=amd64
+    ARCH=armhf
 fi
 
+IP=$(config_get Setup ip)
+GW=$(uci get network.lan.ipaddr)
 PASS=$(config_get Setup pass)
 
 setuplxc

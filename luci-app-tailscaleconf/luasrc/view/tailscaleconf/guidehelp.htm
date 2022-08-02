@@ -1,13 +1,19 @@
 <%+header%>
 <h2 name="title"><%=title%></h2>
-<h5>Tailscale is a zero config VPN for building secure networks.<br>Easily access your LAN network remotely.</h5>
+<h5>‣ Tailscale is a zero config VPN for building secure networks.<br>‣ Easily access your LAN network remotely.</h5>
 <h5>Setup after installing Speedify or setting up a WAN:</h5>
-<img src="/luci-static/resources/view/tailscaleconf/1.png"/>
+<img style="border:6px solid #d2ccf1;" src="/luci-static/resources/view/tailscaleconf/1.png"/>
 <h5>Log result should be similiar to:</h5>
-<img src="/luci-static/resources/view/tailscaleconf/2.png"/>
-<h5>Visit: <a href="http://172.17.17.2:8088/" target="_blank">http://172.17.17.2:8088/</a> to login to Tailscale.<br>After a succesful login, visit: <a href="https://login.tailscale.com/admin/machines" target="_blank">https://login.tailscale.com/admin/machines</a> and toggle settings as following:</h5>
-<img src="/luci-static/resources/view/tailscaleconf/3.png" style="max-height:300px"/><br>
-<img src="/luci-static/resources/view/tailscaleconf/4.png" style="max-height:300px"/><br>
-<img src="/luci-static/resources/view/tailscaleconf/5.png" style="max-height:300px"/><br>
-<h5>Done! You should be able to access your local (LAN) devices from range 172.17.17.0 to 172.17.17.255 remotely on any device that has Tailscale connected to the same account.</h5>
+<img style="border:6px solid #d2ccf1;" src="/luci-static/resources/view/tailscaleconf/2.png"/>
+<h5>Visit: <a href="http://172.17.17.2:8088/" target="_blank">http://172.17.17.2:8088/</a> to login to Tailscale.<br>After a succesful login, visit: <a href="https://login.tailscale.com/admin/machines"        target="_blank">https://login.tailscale.com/admin/machines</a> and toggle settings as following:</h5><hr/>
+<img style="border:6px solid #d2ccf1;" src="/luci-static/resources/view/tailscaleconf/3.png" style="max-height:300px"/><br>
+<img style="border:6px solid #d2ccf1;" src="/luci-static/resources/view/tailscaleconf/4.png" style="max-height:300px"/><br>
+<img style="border:6px solid #d2ccf1;" src="/luci-static/resources/view/tailscaleconf/5.png" style="max-height:300px"/><br><hr/>
+<b style="font-size:110%;">Done! You should be able to access your local (LAN) devices from range 172.17.17.0 to 172.17.17.255 remotely on any device that has Tailscale connected to the same account.</b>
+<hr/>
+<h3>Notes:</h3>
+<h5>
+‣ You can also use Tailscale auto-assigned IP address<br>
+‣ The example assumes that the LAN IP is 172.17.17.2<br>
+‣ Reboot SmoothWAN if you have changed the LAN address and use the new address instead. </h5>
 <%+footer%>

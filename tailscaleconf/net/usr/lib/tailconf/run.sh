@@ -7,9 +7,10 @@ ACTION="${1:-start}"
 config_load tailconf
 
 run_tailscale (){
+  SUB=$(uci get network.lan.ipaddr | sed 's/.$/0/24/')
   cd /usr/share/tailscale || exit 1
   ./tailscaled -tun br-tailscale0 --state /usr/share/tailscale/tailscaled.state 2> /tmp/tailscaled.log &
-  ./tailscale up --accept-dns=false --advertise-routes="172.17.17.0/24" --reset >/dev/null 2>&1 &
+  ./tailscale up --accept-dns=false --advertise-routes="$SUB/24" --reset >/dev/null 2>&1 &
   ./tailscale web --listen=0.0.0.0:8088 &
 }
 
