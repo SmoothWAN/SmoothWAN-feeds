@@ -1,0 +1,13 @@
+{
+	"admin/vpn/spdconf/bypass": {
+		"title": "Custom Bypasses",
+		"order": 59,
+		"action": {
+			"type": "view",
+			"path": "speedifyconf/bypass"
+		},
+		"depends": {
+			"acl": [ "luci-app-speedifyconf" ]
+		}
+	}
+}
