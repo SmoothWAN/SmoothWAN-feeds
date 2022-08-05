@@ -2,8 +2,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tailscaleconf
-PKG_VERSION:=1
-PKG_RELEASE:=2
+PKG_VERSION:=2.1
+PKG_RELEASE:=2.1
 
 PKG_MAINTAINER:=TALMASH
 

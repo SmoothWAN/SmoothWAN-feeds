@@ -21,11 +21,14 @@ parse_pkg_url(){
   VER=$(awk '/tailscale_/{gsub("", "");print;exit}' $PKGS/stable |  awk -v FS="(tailscale_|_386)" '{print $2}')
   
   if [ $(uname -m) = "aarch64" ]; then 
-  PKG_URL="https://pkgs.tailscale.com/stable/tailscale_"$VER"_arm64.tgz"
-  ARCH="arm64"
+    PKG_URL="https://pkgs.tailscale.com/stable/tailscale_"$VER"_arm64.tgz"
+    ARCH="arm64"
+  elif [ $(uname -m) = "x86_64" ]; then
+    PKG_URL="https://pkgs.tailscale.com/stable/tailscale_"$VER"_amd64.tgz"
+    ARCH="amd64"
   else
-  PKG_URL="https://pkgs.tailscale.com/stable/tailscale_"$VER"_amd64.tgz"
-  ARCH="amd64"
+    PKG_URL="https://pkgs.tailscale.com/stable/tailscale_"$VER"_arm.tgz"
+    ARCH="arm"
   fi
 }
 

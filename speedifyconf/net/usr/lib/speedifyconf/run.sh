@@ -78,11 +78,13 @@ installall(){
 }
 
 
-if [ $(uname -m) = "aarch64" ]; then 
-  SPDDIR="/dists/speedify/main/binary-arm64/Packages"
+if [ $(uname -m) = "aarch64" ]; then
+  ARCH=arm64
+  elif [ $(uname -m) = "x86_64" ]; then
+    ARCH=amd64
   else
-  SPDDIR="/dists/speedify/main/binary-amd64/Packages"
-fi    
+    ARCH=armhf
+fi
    
    
 if [ "$ACTION" = "update" ]; then

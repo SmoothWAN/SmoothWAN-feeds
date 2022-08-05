@@ -2,7 +2,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=speedifyconf
-PKG_VERSION:=4.4
+PKG_VERSION:=4.5
 
 PKG_MAINTAINER:=TALMASH
 
@@ -38,6 +38,8 @@ define Package/speedifyconf/install
 	$(INSTALL_BIN) ./net/usr/lib/speedifyconf/run.sh $(1)/usr/lib/speedifyconf/run.sh
 	$(INSTALL_BIN) ./net/usr/lib/speedifyconf/ramcopy.sh $(1)/usr/lib/speedifyconf/ramcopy.sh
 	$(INSTALL_BIN) ./net/usr/lib/speedifyconf/rotatelog.sh $(1)/usr/lib/speedifyconf/rotatelog.sh
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) ./net/usr/bin/wanspeedtest $(1)/usr/bin/wanspeedtest
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_DATA) ./net/etc/config/speedifyconf $(1)/etc/config/speedifyconf
 	$(INSTALL_DIR) $(1)/etc

@@ -2,7 +2,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=piholeconf
-PKG_VERSION:=1.3
+PKG_VERSION:=1.4
 
 PKG_MAINTAINER:=TALMASH
 
