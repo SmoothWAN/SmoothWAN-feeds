@@ -1,2 +1,2 @@
 #!/bin/sh
-curl --interface $1 https://speed.hetzner.de/1GB.bin -m 15 2>&1 |  stdbuf -oL tr -s '\r' '\n'
+curl --interface "$1" https://speed.hetzner.de/1GB.bin -o /dev/null -m 15 2>&1 | stdbuf -oL -eL tr -s '\r' '\n'

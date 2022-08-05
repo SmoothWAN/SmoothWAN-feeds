@@ -34,7 +34,7 @@ uci set lxc-auto.@container[-1].timeout=30
 uci commit lxc-auto
 
 uci del dhcp.lan.dhcp_option
-eval uci add_list dhcp.lan.dhcp_option='6, $IP'
+eval "uci add_list dhcp.lan.dhcp_option='6, $IP'"
 uci commit dhcp
 /etc/init.d/dnsmasq restart
 
