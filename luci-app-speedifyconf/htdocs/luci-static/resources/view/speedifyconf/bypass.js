@@ -27,8 +27,9 @@ return view.extend({
                 var portaddition = document.getElementById("portaddition").value;
                 var protoaddition = document.getElementById("protoaddition").value;
                 var spdarg = portaddition + "/" + protoaddition;
-                fs.exec_direct(bin, ['streamingbypass', 'ports', 'add', spdarg]);
-                window.location.reload();
+                fs.exec_direct(bin, ['streamingbypass', 'ports', 'add', spdarg]).then(function () {
+                        window.location.reload();
+                });
         },
 
         handleDeletePort: function (domain) {
@@ -39,47 +40,54 @@ return view.extend({
                         spdarg = domain.port + "/" + domain.protocol,
                                 args = ['streamingbypass', 'ports', 'rem', spdarg]
                 }
-                fs.exec_direct(bin, args);
-                window.location.reload();
+                fs.exec_direct(bin, args).then(function () {
+                        window.location.reload();
+                });
         },
 
         handleAddDomain: function () {
                 var domainAddition = document.getElementById("domainaddition").value;
                 var spdarg = domainAddition;
-                fs.exec_direct(bin, ['streamingbypass', 'domains', 'add', spdarg]);
-                window.location.reload();
+                fs.exec_direct(bin, ['streamingbypass', 'domains', 'add', spdarg]).then(function () {
+                        window.location.reload();
+                });
         },
 
         handleDeleteDomain: function (domain) {
                 args = ['streamingbypass', 'domains', 'rem', domain]
-                fs.exec_direct(bin, args);
-                window.location.reload();
+                fs.exec_direct(bin, args).then(function () {
+                        window.location.reload();
+                });
         },
 
         handleAddIPv4: function () {
                 var IPv4Addition = document.getElementById("ipv4addition").value;
                 var spdarg = IPv4Addition;
-                fs.exec_direct(bin, ['streamingbypass', 'ipv4', 'add', spdarg]);
-                window.location.reload();
+                fs.exec_direct(bin, ['streamingbypass', 'ipv4', 'add', spdarg]).then(function () {
+                        window.location.reload();
+                });
         },
 
         handleDeleteIPv4: function (domain) {
                 args = ['streamingbypass', 'ipv4', 'rem', domain]
-                fs.exec_direct(bin, args);
-                window.location.reload();
+                fs.exec_direct(bin, args).then(function () {
+                        window.location.reload();
+                });
         },
 
         handleAddIPv6: function () {
                 var IPv6Addition = document.getElementById("ipv6addition").value;
                 var spdarg = IPv6Addition;
-                fs.exec_direct(bin, ['streamingbypass', 'ipv6', 'add', spdarg]);
-                window.location.reload();
+                fs.exec_direct(bin, ['streamingbypass', 'ipv6', 'add', spdarg]).then(function () {
+                        window.location.reload();
+                });
         },
 
         handleDeleteIPv6: function (domain) {
                 args = ['streamingbypass', 'ipv6', 'rem', domain]
-                fs.exec_direct(bin, args);
-                window.location.reload();
+                fs.exec_direct(bin, args).then(function () {
+                        window.location.reload();
+                });
         },
 
         renderBypass: function (data) {
