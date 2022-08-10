@@ -18,7 +18,7 @@ end
 function genlog.write()
   luci.sys.call("tar -czf /tmp/spdlogs.tar.gz /usr/share/speedify/logs/* /etc/config/*")
   luci.sys.call("ln -s /tmp/spdlogs.tar.gz /www/spdlogs.tar.gz")
-  luci.http.redirect("../../../../spdlogs.tar.gz")
+  luci.http.redirect("/spdlogs.tar.gz")
 end
 
 return config
