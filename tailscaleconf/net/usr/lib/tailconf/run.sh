@@ -7,7 +7,11 @@ ACTION="${1:-start}"
 config_load tailconf
 
 run_tailscale (){
-  SUB=$(uci get network.lan.ipaddr | sed 's/.$/0/')
+  if [ -f /usr/lib/tailconf/advertise-routes ]; then
+    SUB=$(cat /usr/lib/tailconf/advertise-routes | sed ':a;N;$!ba;s/\n/,/g;s/\r//g')
+  else
+    SUB=$(uci get network.lan.ipaddr | sed 's/.$/0/')
+  fi
   cd /usr/share/tailscale || exit 1
   ./tailscaled -tun br-tailscale0 --state /usr/share/tailscale/tailscaled.state 2> /tmp/tailscaled.log &
   ./tailscale up --accept-dns=false --advertise-routes="$SUB/24" --reset >/dev/null 2>&1 &
