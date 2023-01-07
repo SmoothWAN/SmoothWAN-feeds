@@ -11,19 +11,9 @@ run_speedify (){
    cd /usr/share/speedify || exit 1
    sh DisableRpFilter.sh 
    mkdir -p logs
-   ./speedify -d logs &
+   capsh --drop=cap_sys_nice -- -c './speedify -d logs &'
    sleep 2
    ./speedify_cli startupconnect on > /dev/null
-
-  
-   #OLED-SSD1306 status display (crude workaround for now)
-   if [[ -f "/usr/bin/ssd" ]]; then
-    sh /usr/lib/speedifyconf/rotatelog.sh &
-    sleep 1
-    cd /etc/ssd || exit 1
-    killall ssd 2> /dev/null
-    nice -n100 ssd -c config.json > /dev/null &
-   fi
 }
 
 parse_apt_url(){
