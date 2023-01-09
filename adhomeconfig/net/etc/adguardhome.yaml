@@ -15,12 +15,12 @@ dns:
   - 0.0.0.0
   port: 5353
   statistics_interval: 1
-  querylog_enabled: true
+  querylog_enabled: false
   querylog_file_enabled: true
   querylog_interval: 2160h
   querylog_size_memory: 1000
   anonymize_client_ip: false
-  protection_enabled: true
+  protection_enabled: false
   blocking_mode: default
   blocking_ipv4: ""
   blocking_ipv6: ""
@@ -31,7 +31,10 @@ dns:
   ratelimit_whitelist: []
   refuse_any: true
   upstream_dns:
-  - https://dns10.quad9.net/dns-query
+    - https://dns.nextdns.io
+    - https://dns10.quad9.net/dns-query
+    - https://dns.google/dns-query
+    - https://dns.cloudflare.com/dns-query
   upstream_dns_file: ""
   bootstrap_dns:
   - 9.9.9.10
