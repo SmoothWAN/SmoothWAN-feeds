@@ -1,0 +1,25 @@
+#!/bin/sh /etc/rc.common
+  
+START=99
+USE_PROCD=1
+
+service_triggers()
+{
+        procd_add_reload_trigger "adhomeconfig"
+}
+
+reload_service()
+{
+        start "$@"
+}
+
+start_service()
+{
+        /etc/init.d/adguardhome stop
+        PASS=$(uci -q get adhomeconfig.Setup.pass)
+        PASS=$(htpasswd -B -n -b root $PASS| awk -F":" '{print (NF>1)? $NF : ""}')
+        PASS=$(echo $PASS | sed -e 's/\$/\\$/g')
+        PASS=$(echo $PASS | sed 's/\//\\\//g')
+        sed -i.bak "/^[[:space:]]*password:/ s/:.*/: $PASS/" /etc/adguardhome.yaml
+        /etc/init.d/adguardhome start
+}

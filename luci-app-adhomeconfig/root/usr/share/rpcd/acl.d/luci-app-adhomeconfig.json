@@ -1,0 +1,18 @@
+{
+	"luci-app-adhomeconfig": {
+			"description": "Grant UCI access for luci-app-adhomeconfig",
+			"read": {
+					"uci": [ "adhomeconfig" ]
+			},
+					"file": {
+							"/etc/init.d/adhomeconfig start" : [ "exec" ]
+			},
+					"ubus": {
+							"file": [ "read", "list" ],
+							"luci": [ "setInitAction" ]
+			},
+			"write": {
+					"uci": [ "adhomeconfig" ]
+			}
+	}
+}

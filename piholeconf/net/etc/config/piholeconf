@@ -1,3 +1,0 @@
-config config 'Setup'
-	option ip '172.17.17.3'
-	option pass 'brassworld'

@@ -1,0 +1,10 @@
+#!/bin/sh
+
+uci -q batch <<-EOF >/dev/null
+	delete ucitrack.@adhomeconfig[-1]
+	add ucitrack adhomeconfig
+    set ucitrack.@adhomeconfig[-1].init=adhomeconfig
+	commit ucitrack
+EOF
+
+exit 0

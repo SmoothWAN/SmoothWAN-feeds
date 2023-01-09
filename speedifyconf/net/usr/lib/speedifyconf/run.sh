@@ -44,7 +44,6 @@ installall(){
         exit 0
    fi
 
-
    rm -rf /tmp/spddw
    echo "Downloading Speedify"
    wget -P /tmp/spddw/speedify/ "$DWURL"
@@ -62,7 +61,7 @@ installall(){
    ln -sf /usr/share/speedifyui/files/* /www/spdui/
    echo "Deleting download cache"
    rm -rf /tmp/spddw
-   echo "Updating configuration -tmash"
+   echo "Updating configuration"
    uci set speedifyconf.Setup.version=$DWVER
    uci commit
    chmod 755 /etc/init.d/speedifyconf
@@ -98,6 +97,7 @@ else
   AUPD=$(config_get Setup autoupdate)
   if [ "$AUPD" = 1 ]; then
     echo "Update on boot enabled."
+    echo "Checking for updates..."
     parse_apt_url
     CURRVER=$(config_get Setup version | awk -F '|' -v 'OFS=|' '{ gsub(/[^0-9]/,"",$NF); print}')
     DWVER=$(echo $DWVER | awk -F '|' -v 'OFS=|' '{ gsub(/[^0-9]/,"",$NF); print}')
