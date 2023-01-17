@@ -9,11 +9,21 @@ config_load speedifyconf
 
 run_speedify (){
    cd /usr/share/speedify || exit 1
-   sh DisableRpFilter.sh 
+   sh DisableRpFilter.sh
    mkdir -p logs
    capsh --drop=cap_sys_nice -- -c './speedify -d logs &'
    sleep 2
    ./speedify_cli startupconnect on > /dev/null
+}
+
+parse_versions(){
+   APT=$(config_get Setup apt)
+   APT=$(echo $APT | sed -e 's/\/$//')
+   echo RepoUser:$APT
+   aptURL="$APT$SPDDIR"
+   echo ParsedURL:$aptURL
+   curl -o $PKGS $aptURL
+   cat $PKGS | grep Version
 }
 
 parse_apt_url(){
@@ -23,18 +33,29 @@ parse_apt_url(){
    aptURL="$APT$SPDDIR"
    echo ParsedURL:$aptURL
    curl -o $PKGS $aptURL
-   
+
    DWVER=$(awk '/Version:/{gsub("Version: ", "");print;exit}' $PKGS)
    echo RepoVer:$DWVER
-   
+
    SPDDW=$(awk '/Filename/{gsub("Filename: ", "");print;exit}' $PKGS)
    export DWURL=$APT/$SPDDW
    echo SpdDownloadURL:$DWURL
-   
+
    UIDW=$(sed -n '/speedifyui/{nnnnnnnn;p;q}' $PKGS | awk '/Filename/{gsub("Filename: ", "");print;exit}')
    export UIDWURL=$APT/$UIDW
    echo UIDownloadURL:$UIDWURL
 
+   if [[ $(config_get Setup verovd) ]]; then
+        echo "Version override is set!"
+        DWVER=$(config_get Setup verovd)
+        echo "Set to $DWVER"
+        SPDDW=$(sed -n '/'"$DWVER"'/{nn;p;q}' $PKGS | awk '/Filename/{gsub("Filename: ", "");print;exit}')
+        export DWURL=$APT/$SPDDW
+        echo SpdDownloadURL:$DWURL
+        UIDW=$(sed -n '/'"$DWVER"'/{nn;p;q}' $PKGS | awk '/Filename/{gsub("Filename: ", "");print;exit}' | sed 's/speedify/speedifyui/g')
+        export UIDWURL=$APT/$UIDW
+        echo UIDownloadURL:$UIDWURL
+   fi
 }
 
 installall(){
@@ -80,8 +101,8 @@ if [ $(uname -m) = "aarch64" ]; then
     ARCH=armhf
     SPDDIR="/dists/speedify/main/binary-armhf/Packages"
 fi
-   
-   
+
+
 if [ "$ACTION" = "update" ]; then
   parse_apt_url
   installall
@@ -91,6 +112,10 @@ else
   if [ "$ACTION" = "stopkill" ]; then
     echo "Killing Speedify"
     killall -KILL speedify
+    exit 0
+  fi
+  if [ "$ACTION" = "list-versions" ]; then
+    parse_versions
     exit 0
   fi
   echo "Starting Speedify"

@@ -1,7 +1,7 @@
 {
 	"admin/vpn/spdconf/bypass": {
 		"title": "Custom Bypasses",
-		"order": 59,
+		"order": 3,
 		"action": {
 			"type": "view",
 			"path": "speedifyconf/bypass"

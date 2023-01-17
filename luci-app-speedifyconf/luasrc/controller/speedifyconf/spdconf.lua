@@ -1,5 +1,5 @@
 module("luci.controller.speedifyconf.spdconf", package.seeall)
-  
+
 local fs = require "nixio.fs"
 local sys = require "luci.sys"
 local template = require "luci.template"
@@ -10,13 +10,14 @@ function index()
      local e = entry({"admin", "vpn", "spdconf"}, firstchild(), _("Speedify"), 60)
      e.acl_depends = { "luci-app-speedifyconf" }
      e.dependent = false
-     
+
      entry({"admin", "vpn", "spdconf", "config"}, cbi("speedifyconf/spdconf"), _("Configuration"), 1)
      entry({"admin", "vpn", "spdconf", "logs"}, call("spdconflog"), _("View Log"), 2)
+     entry({"admin", "vpn", "spdconf", "options"}, cbi("speedifyconf/options"), _("Options"), 4)
 end
 
 function spdconflog()
-    local logfile = fs.readfile("/usr/share/speedifyconfig.log") or ""
+    local logfile = fs.readfile("/tmp/speedifyconfig.log") or ""
     template.render("speedifyconf/file_viewer",
         {title = i18n.translate("Install/Service Script Log"), content = logfile})
 end
