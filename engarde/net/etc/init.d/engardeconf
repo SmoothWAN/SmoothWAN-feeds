@@ -1,0 +1,77 @@
+#!/bin/sh /etc/rc.common
+
+START=99
+USE_PROCD=1
+
+service_triggers()
+{
+        procd_add_reload_trigger "engardeconf"
+}
+
+reload_service()
+{
+        stop "$@"
+        sleep 5
+        start "$@"
+}
+
+start_service()
+{
+        if [ $(uci get engardeconf.Setup.enabled) == 1 ]
+         then
+                uci set speedifyconf.Setup.enabled=0
+                uci set tinyvpnconf.Setup.enabled=0
+                uci commit speedifyconf
+                uci commit tinyvpnconf
+                cp /usr/lib/lua/luci/view/admin_status/index.htm.engarde /usr/lib/lua/luci/view/admin_status/index.htm
+                continue
+        else
+                cp /usr/lib/lua/luci/view/admin_status/index.htm.speedify /usr/lib/lua/luci/view/admin_status/index.htm
+                exit 0
+        fi
+
+        /etc/init.d/speedifyconf restart
+        /etc/init.d/tinyvpnconf restart
+        listenAddr=$(uci get engardeconf.Setup.listenAddr):$(uci get engardeconf.Setup.listenPort)
+        dstAddr=$(uci get engardeconf.Setup.dstAddr):$(uci get engardeconf.Setup.dstPort)
+        skey=$(printf $(uci get engardeconf.Setup.pass) | openssl dgst -binary -sha256 | openssl base64 -A)
+        spubkey=$(echo $skey | wg pubkey)
+        ckey=$(printf $skey | openssl dgst -binary -sha256 | openssl base64 -A)
+        cpubkey=$(echo $ckey | wg pubkey)
+        psk=$(printf $ckey | openssl dgst -binary -sha256 | openssl base64 -A)
+        mkdir /etc/engarde
+        echo -e 'client:\n listenAddr: '$listenAddr' \n dstAddr: '$dstAddr' \n excludedInterfaces: \n   - "br-lan"\n   - "Engarde"\n webManager:\n     listenAddr: 0.0.0.0:9001\n' > /etc/engarde/engarde.yml
+        if [ ! "$(uci show network.Engarde)" ]; then
+          uci add_list firewall.cfg03dc81.network='Engarde'
+          uci set network.Engarde=interface
+          uci set network.Engarde.proto='wireguard'
+          uci add network wireguard_Engarde # =cfg115a64
+          uci set network.Engarde.private_key="$ckey"
+          uci add_list network.Engarde.addresses='10.202.0.10'
+          uci set network.Engarde.mtu='1280'
+          uci set network.@wireguard_Engarde[-1].public_key="$spubkey"
+          uci set network.@wireguard_Engarde[-1].preshared_key="$psk"
+          uci add_list network.@wireguard_Engarde[-1].allowed_ips='0.0.0.0/0'
+          uci set network.@wireguard_Engarde[-1].route_allowed_ips='1'
+          uci set network.@wireguard_Engarde[-1].endpoint_host="$(uci get engardeconf.Setup.listenAddr)"
+          uci set network.@wireguard_Engarde[-1].endpoint_port="$(uci get engardeconf.Setup.listenPort)"
+          uci set network.@wireguard_Engarde[-1].persistent_keepalive='25'
+          uci commit firewall
+          uci commit network
+          ifup Engarde
+        fi
+        screen -d -m sh -c "ulimit -n 65535 && nice -n -20 /usr/bin/engarde-client /etc/engarde/engarde.yml"
+}
+
+stop_service()
+{
+        ifdown Engarde
+        killall engarde-client
+        if [ "$(uci show network.Engarde)" ]; then
+           uci del_list firewall.cfg03dc81.network='Engarde'
+           uci del network.Engarde
+           uci del network.@wireguard_Engarde[-1]
+           uci commit firewall
+           uci commit network
+        fi
+}

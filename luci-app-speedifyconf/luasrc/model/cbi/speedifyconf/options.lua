@@ -5,7 +5,7 @@ verovd = view:option(Value, "verovd", "Version override:", "Format example: 12.8
 dmpver = view:option(Button, "_dmpver", "List versions", "Lists previously available versions in the log tab.")
 restart = view:option(Button, "_restart", "Restart Speedify", "Force restart Speedify.")
 stop = view:option(Button, "_stop", "Halt Speedify", "Force stop Speedify.")
-uninstall = view:option(Button, "_remove", "Uninstall Speedify", "Remove all Speedify files")
+uninstall = view:option(Button, "_remove", "Uninstall Speedify", "Remove all files.")
 
 function dmpver.write()
   luci.sys.call("echo 'Log Reset' > /tmp/speedifyconfig.log")
@@ -24,7 +24,7 @@ end
 function uninstall.write()
  luci.sys.call("/etc/init.d/speedifyconf stop")
  luci.sys.call("rm -rf /usr/share/speedify/* /usr/share/speedifyui/* /www/spdui/*")
- luci.sys.call("echo '<h1>Speedify was manually uninstalled...</h1>' | tee /www/spdui/index.html | tee /tmp/speedifyconfig.log")
+ luci.sys.call("echo 'Speedify was manually uninstalled...' | tee /www/spdui/index.html | tee /tmp/speedifyconfig.log &")
  luci.http.redirect("/cgi-bin/luci/admin/vpn/spdconf/logs")
 end
 

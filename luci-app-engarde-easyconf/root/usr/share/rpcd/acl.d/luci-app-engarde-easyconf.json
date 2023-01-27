@@ -1,0 +1,18 @@
+{
+	"luci-app-engarde-easyconf": {
+			"description": "Grant UCI access for luci-app-engarde-easyconf",
+			"read": {
+					"uci": [ "engardeconf" ]
+			},
+					"file": {
+							"/etc/init.d/engarde start" : [ "exec" ]
+			},
+					"ubus": {
+							"file": [ "read", "list" ],
+							"luci": [ "setInitAction" ]
+			},
+			"write": {
+					"uci": [ "engardeconf" ]
+			}
+	}
+}
