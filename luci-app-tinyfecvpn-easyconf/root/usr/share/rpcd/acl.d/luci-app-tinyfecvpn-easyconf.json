@@ -1,0 +1,18 @@
+{
+	"luci-app-tinyfecvpn-easyconf": {
+			"description": "Grant UCI access for luci-app-tinyfecvpn-easyconf",
+			"read": {
+					"uci": [ "tinyvpnconf" ]
+			},
+					"file": {
+							"/etc/init.d/tinyvpnconf start" : [ "exec" ]
+			},
+					"ubus": {
+							"file": [ "read", "list" ],
+							"luci": [ "setInitAction" ]
+			},
+			"write": {
+					"uci": [ "tinyvpnconf" ]
+			}
+	}
+}

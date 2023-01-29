@@ -7,12 +7,12 @@ local i18n = require "luci.i18n"
 
 
 function index()
-     local e = entry({"admin", "VPN", "engconf"}, firstchild(), _("Engarde"), 60)
+     local e = entry({"admin", "vpn", "engconf"}, firstchild(), _("Engarde"), 60)
      e.acl_depends = { "luci-app-engarde-easyconf" }
      e.dependent = false
 
-     entry({"admin", "services", "engconf", "guide"}, call("guidehelp"), _("Guide"), 1)
-     entry({"admin", "services", "engconf", "config"}, cbi("engardeconf/engardeconf"), _("Configuration"), 2)
+     entry({"admin", "vpn", "engconf", "guide"}, call("guidehelp"), _("Guide"), 1)
+     entry({"admin", "vpn", "engconf", "config"}, cbi("engardeconf/engardeconf"), _("Configuration"), 2)
 end
 
 function guidehelp()

@@ -1,12 +1,14 @@
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=engarde
-PKG_VERSION:=ea25ee43
+PKG_NAME:=engarde-easyconf
+PKG_VERSION:=17053b8
 PKG_RELEASE:=1.0
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_VERSION:=cf9b487167c826cbdcfa2fa6ae39d04fac5e9ba0
-PKG_SOURCE_URL:=https://github.com/porech/engarde
+PKG_SOURCE_VERSION:=17053b8e3d39bc8bc6678befc1a586d8725b2847
+PKG_SOURCE_URL:=https://github.com/SmoothWAN/engarde
+
+DEPENDS=:+screen
 
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/golang/golang-values.mk
@@ -45,15 +47,14 @@ KERNEL_ARCH= `\
 MAKE_VARS = \
 	GOARCH=$($KERNEL_ARCH)
 
-define Package/engarde
+define Package/engarde-easyconf
 	SECTION:=VPN
 	CATEGORY:=Network
 	TITLE:=A go network utility to create a reliable IP tunnel over multiple connections
 	URL:=https://github.com/porech/engarde
-	PKGARCH=all
 endef
 
-define Package/engarde/description
+define Package/engarde-easyconf/description
 A go network utility to create a reliable IP tunnel over multiple connections
 endef
 
@@ -72,14 +73,14 @@ define Build/Compile
 	)
 endef
 
-define Package/engarde/install
+define Package/engarde-easyconf/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/dist/linux/$(KERNEL_ARCH)/engarde-client $(1)/usr/bin/engarde-client
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/dist/linux/$(KERNEL_ARCH)/engarde-server $(1)/usr/bin/engarde-server
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/dist/linux/$(KERNEL_ARCH)/engarde-client.linux.$(KERNEL_ARCH) $(1)/usr/bin/engarde-client
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/dist/linux/$(KERNEL_ARCH)/engarde-server.linux.$(KERNEL_ARCH) $(1)/usr/bin/engarde-server
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_DATA) ./net/etc/config/engardeconf $(1)/etc/config/engardeconf
 	$(INSTALL_DIR) $(1)/etc/init.d
-	$(INSTALL_DATA) ./net/etc/init.d/engardeconf $(1)/etc/init.d/engardeconf
+	$(INSTALL_BIN) ./net/etc/init.d/engardeconf $(1)/etc/init.d/engardeconf
 endef
 
-$(eval $(call BuildPackage,engarde))
+$(eval $(call BuildPackage,engarde-easyconf))

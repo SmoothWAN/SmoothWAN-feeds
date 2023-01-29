@@ -1,0 +1,10 @@
+#!/bin/sh
+
+uci -q batch <<-EOF >/dev/null
+	delete ucitrack.@engardeconf[-1]
+	add ucitrack engardeconf
+    set ucitrack.@engardeconf[-1].init=engardeconf
+	commit ucitrack
+EOF
+
+exit 0

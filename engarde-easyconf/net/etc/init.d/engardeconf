@@ -26,7 +26,6 @@ start_service()
                 cp /usr/lib/lua/luci/view/admin_status/index.htm.engarde /usr/lib/lua/luci/view/admin_status/index.htm
                 continue
         else
-                cp /usr/lib/lua/luci/view/admin_status/index.htm.speedify /usr/lib/lua/luci/view/admin_status/index.htm
                 exit 0
         fi
 
@@ -60,7 +59,7 @@ start_service()
           uci commit network
           ifup Engarde
         fi
-        screen -d -m sh -c "ulimit -n 65535 && nice -n -20 /usr/bin/engarde-client /etc/engarde/engarde.yml"
+        screen -L -Logfile /tmp/engarde.log d -m sh -c "ulimit -n 65535 && nice -n -20 /usr/bin/engarde-client /etc/engarde/engarde.yml"
 }
 
 stop_service()

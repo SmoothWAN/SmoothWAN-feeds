@@ -5,7 +5,7 @@
 					"uci": [ "engardeconf" ]
 			},
 					"file": {
-							"/etc/init.d/engarde start" : [ "exec" ]
+							"/etc/init.d/engardeconf start" : [ "exec" ]
 			},
 					"ubus": {
 							"file": [ "read", "list" ],
