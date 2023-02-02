@@ -1,6 +1,4 @@
 #cloud-config
-packages:
-  - wireguard
 runcmd:
   - ################
   - ### PASSWORD ###
@@ -13,23 +11,10 @@ runcmd:
   - systemctl stop ssh
   - ufw disable
   - SERVER_PUB_NIC=$(ip route | awk 'NR==1{print$5}') #Default route is first line _usually_
-  - printf $Password | openssl dgst -binary -sha256 | openssl base64 -A > /root/private-key
-  - ckey=$(cat /root/private-key | openssl dgst -binary -sha256 | openssl base64 -A)
-  - cpubkey=$(echo $ckey | wg pubkey)
-  - printf $ckey | openssl dgst -binary -sha256 | openssl base64 -A > /root/preshared-key
-  - ip link add dev wg0 type wireguard
-  - ip address add dev wg0 10.202.0.5 peer 10.202.0.10
-  - wg set wg0 listen-port 65532 private-key /root/private-key peer $cpubkey preshared-key /root/preshared-key allowed-ips 10.202.0.10 persistent-keepalive 25
-  - ip link set up dev wg0
-  - #(uncommon) Replace amd64 with arm64 if your server is ARM#
-  - wget https://github.com/SmoothWAN/engarde/releases/download/master/engarde-server.linux.amd64 -O /usr/bin/engarde-server
-  - chmod +x /usr/bin/engarde-server && mkdir -p /etc/engarde
-  - wget https://raw.githubusercontent.com/SmoothWAN/SmoothWAN-misc/main/engarde/engarde-server.yml -O /etc/engarde/engarde.yml
+  - ip address add dev wg0 10.202.0.1 peer 10.202.0.2
   - wget https://github.com/SmoothWAN/tinyfecVPN/releases/download/master/tinyvpn_amd64 -O /usr/bin/tinyvpn
   - chmod +x /usr/bin/tinyvpn
-  - /usr/bin/engarde-server /etc/engarde/engarde.yml &
   - /usr/bin/tinyvpn -s -l0.0.0.0:65520 -f1:3,2:4,8:6,20:10 -k "$Password" --sub-net 10.202.0.0 --tun-mtu 65535 --disable-checksum --disable-obscure --keep-reconnect --tun-dev tinyfec0 &
-  - ip link set wg0 mtu 1280
   - ulimit -n 65535
   - sysctl -w net.core.rmem_max=26214400
   - sysctl -w net.core.rmem_default=26214400
@@ -37,15 +22,10 @@ runcmd:
   - sysctl -w net.core.wmem_default=26214400
   - sysctl -w net.core.netdev_max_backlog=2048
   - echo 1 > /proc/sys/net/ipv4/ip_forward
-  - iptables -A FORWARD -i $SERVER_PUB_NIC -o wg0 -j ACCEPT
-  - iptables -A FORWARD -i wg0 -j ACCEPT
   - iptables -A FORWARD -i $SERVER_PUB_NIC -o tinyfec0 -j ACCEPT
   - iptables -A FORWARD -i tinyfec0 -j ACCEPT
   - iptables -t nat -A POSTROUTING -s 10.202.0.0/24 -j MASQUERADE
   - #Change 1024-65000 range to open lower ports, 65518 and higher is reserved, defaults adjusted for UPnP
-  - iptables -t nat -A PREROUTING -i $SERVER_PUB_NIC -p udp --dport 1024:65000 -j DNAT --to-destination 10.202.0.10:1024-65000
-  - iptables -t nat -A PREROUTING -i $SERVER_PUB_NIC -p tcp --dport 1024:65000 -j DNAT --to-destination 10.202.0.10:1024-65000
-  - #TinyFEC default p2p client IP
   - iptables -t nat -A PREROUTING -i $SERVER_PUB_NIC -p udp --dport 1024:65000 -j DNAT --to-destination 10.202.0.2:1024-65000
   - iptables -t nat -A PREROUTING -i $SERVER_PUB_NIC -p tcp --dport 1024:65000 -j DNAT --to-destination 10.202.0.2:1024-65000
 

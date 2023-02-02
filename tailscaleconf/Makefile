@@ -40,7 +40,7 @@ define Package/tailscaleconf/install
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_DATA) ./net/etc/config/tailconf $(1)/etc/config/tailconf
 	$(INSTALL_DIR) $(1)/etc/init.d
-	$(INSTALL_DATA) ./net/etc/init.d/tailconf $(1)/etc/init.d/tailconf
+	$(INSTALL_BIN) ./net/etc/init.d/tailconf $(1)/etc/init.d/tailconf
 endef
 
 $(eval $(call BuildPackage,tailscaleconf))

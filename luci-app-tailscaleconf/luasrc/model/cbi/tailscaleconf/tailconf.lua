@@ -8,10 +8,12 @@ genlog = view:option(Button, "_genlog", "Download Log", "Download daemon log fil
 
 function upd.write()
   luci.sys.call("echo 'Log Reset' > /usr/lib/tailconf/tailconfig.log && sh /usr/lib/tailconf/run.sh update >> /usr/lib/tailconf/tailconfig.log &")
+  luci.http.redirect("/cgi-bin/luci/admin/vpn/tailconf/logs")
 end
 
 function uni.write()
   luci.sys.call("echo 'Log Reset' > /usr/lib/tailconf/tailconfig.log && sh /usr/lib/tailconf/run.sh uninstall >> /usr/lib/tailconf/tailconfig.log &")
+  luci.http.redirect("/cgi-bin/luci/admin/vpn/tailconf/logs")
 end
 
 function genlog.write()

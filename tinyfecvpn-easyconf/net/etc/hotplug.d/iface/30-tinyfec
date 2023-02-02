@@ -1,0 +1,1 @@
+ip route add $(uci get tinyvpnconf.Setup.dstAddr)/32 via $(ip route | awk 'NR==2{print $3}')

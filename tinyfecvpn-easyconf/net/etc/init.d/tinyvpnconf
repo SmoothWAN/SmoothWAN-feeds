@@ -22,15 +22,17 @@ start_service()
                 uci set speedifyconf.Setup.enabled=0
                 uci set engardeconf.Setup.enabled=0
                 uci commit speedifyconf
-                uci commit tinyvpnconf
-                cp /usr/lib/lua/luci/view/admin_status/index.htm.orig /usr/lib/lua/luci/view/admin_status/index.htm
+                uci commit engardeconf
+                cp /usr/lib/lua/luci/view/admin_status/index.htm.tinyfec /usr/lib/lua/luci/view/admin_status/index.htm
                 continue
         else
+                stop "$@"
                 exit 0
         fi
 
-        /etc/init.d/speedifyconf restart
-        /etc/init.d/engardeconf restart
+        /etc/init.d/speedifyconf stop
+        /etc/init.d/engardeconf stop
+        sleep 10
         dstAddr=$(uci get tinyvpnconf.Setup.dstAddr):$(uci get tinyvpnconf.Setup.dstPort)
         password=$(uci get tinyvpnconf.Setup.pass)
         fecparam=$(uci get tinyvpnconf.Setup.fecParam)
@@ -50,16 +52,27 @@ start_service()
         fi
         ip route add $(uci get tinyvpnconf.Setup.dstAddr)/32 via $(ip route | awk 'NR==1{print $3}')
         screen -L -Logfile /tmp/tinyfecvpn.log -d -m sh -c "ulimit -n 65535 && nice -n -20 /usr/bin/tinyfecvpn -c -r$dstAddr -f$fecparam -k $password --sub-net $subnet --keep-reconnect --tun-mtu 65535 --disable-checksum --disable-obscure --tun-dev tinyfec0"
+        uci set upnpd.config.external_ip=$(uci get tinyvpnconf.Setup.dstAddr)
+        uci set upnpd.config.enabled='1'
+        uci commit upnpd
 }
 
 stop_service()
 {
+        uci set upnpd.config.enabled='0'
+        uci commit upnpd
         killall tinyfecvpn
+        if [ $(uci get tinyvpnconf.Setup.enabled) == 1 ]
+         then
+                break
+        else
         ip route del $(uci get tinyvpnconf.Setup.dstAddr)/32
         if [ "$(uci show network.TinyFEC)" ]; then
            uci del_list firewall.cfg03dc81.network='TinyFEC'
            uci del network.TinyFEC
            uci commit firewall
            uci commit network
+           /etc/init.d/network restart
+        fi
         fi
 }

@@ -8,10 +8,13 @@ PKGS=/tmp/spdpkgs
 config_load speedifyconf
 
 run_speedify (){
+   if [ $(uci get speedifyconf.Setup.enabled) == 0 ]; then
+        exit 0
+   fi
    cd /usr/share/speedify || exit 1
    sh DisableRpFilter.sh
    mkdir -p logs
-   capsh --drop=cap_sys_nice -- -c './speedify -d logs &'
+   nice -n -20 capsh --drop=cap_sys_nice -- -c './speedify -d logs &'
    sleep 2
    ./speedify_cli startupconnect on > /dev/null
 }

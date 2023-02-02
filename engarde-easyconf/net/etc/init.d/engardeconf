@@ -26,11 +26,12 @@ start_service()
                 cp /usr/lib/lua/luci/view/admin_status/index.htm.engarde /usr/lib/lua/luci/view/admin_status/index.htm
                 continue
         else
+                stop "$@"
                 exit 0
         fi
-
-        /etc/init.d/speedifyconf restart
-        /etc/init.d/tinyvpnconf restart
+        /etc/init.d/speedifyconf stop
+        /etc/init.d/tinyvpnconf stop
+        sleep 10
         listenAddr=$(uci get engardeconf.Setup.listenAddr):$(uci get engardeconf.Setup.listenPort)
         dstAddr=$(uci get engardeconf.Setup.dstAddr):$(uci get engardeconf.Setup.dstPort)
         skey=$(printf $(uci get engardeconf.Setup.pass) | openssl dgst -binary -sha256 | openssl base64 -A)
@@ -59,11 +60,16 @@ start_service()
           uci commit network
           ifup Engarde
         fi
-        screen -L -Logfile /tmp/engarde.log d -m sh -c "ulimit -n 65535 && nice -n -20 /usr/bin/engarde-client /etc/engarde/engarde.yml"
+        screen -L -Logfile /tmp/engarde.log -d -m sh -c "ulimit -n 65535 && nice -n -20 /usr/bin/engarde-client /etc/engarde/engarde.yml"
+        uci set upnpd.config.external_ip=$(uci get engardeconf.Setup.dstAddr)
+        uci set upnpd.config.enabled='1'
+        uci commit upnpd
 }
 
 stop_service()
 {
+        uci set upnpd.config.enabled='0'
+        uci commit upnpd
         ifdown Engarde
         killall engarde-client
         if [ "$(uci show network.Engarde)" ]; then

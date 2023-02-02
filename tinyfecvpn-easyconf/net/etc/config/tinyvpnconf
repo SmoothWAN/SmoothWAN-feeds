@@ -2,6 +2,6 @@ config config 'Setup'
         option subnet "10.202.0.0"
         option fecParam "1:3,2:4,8:6,20:10"
         option dstAddr "123.123.123.123"
-        option dstPort "65531"
+        option dstPort "65520"
         option pass "none"
         option enabled "0"
