@@ -63,20 +63,20 @@ endef
 define Build/Compile
 	( \
 		pushd $(PKG_BUILD_DIR) ; \
-		wget https://github.com/SmoothWAN/tinyfecVPN/releases/download/master/tinyvpn_$KERNEL_ARCH ; \
+		wget https://github.com/SmoothWAN/tinyfecVPN/releases/download/master/tinyvpn_$(KERNEL_ARCH) ; \
 		popd ; \
 	)
 endef
 
 define Package/tinyfecvpn-easyconf/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/tinyvpn_$KERNEL_ARCH $(1)/usr/bin/tinyfecvpn
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/tinyvpn_$(KERNEL_ARCH) $(1)/usr/bin/tinyfecvpn
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_DATA) ./net/etc/config/tinyvpnconf $(1)/etc/config/tinyvpnconf
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./net/etc/init.d/tinyvpnconf $(1)/etc/init.d/tinyvpnconf
 	$(INSTALL_DIR) $(1)/etc/hotplug.d/iface
-	$(INSTALL_BIN) ./etc/hotplug.d/iface/30-tinyfec $(1)/etc/hotplug.d/iface/30-tinyfec
+	$(INSTALL_BIN) ./net/etc/hotplug.d/iface/30-tinyfec $(1)/etc/hotplug.d/iface/30-tinyfec
 endef
 
 $(eval $(call BuildPackage,tinyfecvpn-easyconf))

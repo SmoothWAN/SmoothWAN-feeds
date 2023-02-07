@@ -41,7 +41,7 @@ define Package/speedifyconf/install
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_DATA) ./net/etc/config/speedifyconf $(1)/etc/config/speedifyconf
 	$(INSTALL_DIR) $(1)/etc/init.d
-	$(INSTALL_DATA) ./net/etc/init.d/speedifyconf $(1)/etc/init.d/speedifyconf
+	$(INSTALL_BIN) ./net/etc/init.d/speedifyconf $(1)/etc/init.d/speedifyconf
 endef
 
 $(eval $(call BuildPackage,speedifyconf))

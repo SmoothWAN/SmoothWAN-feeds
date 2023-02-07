@@ -1,0 +1,33 @@
+#!/bin/sh /etc/rc.common
+
+START=99
+USE_PROCD=1
+
+
+reload_service()
+{
+        stop "$@"
+        sleep 5
+        start "$@"
+}
+
+start_service()
+{
+        if [ $(uci get ntopconf.Setup.enabled) == 1 ]
+         then
+                echo 100000000 > /sys/block/zram0/disksize
+                mkswap /dev/zram0
+                swapon /dev/zram0
+        else
+                exit 0
+        fi
+        procd_open_instance
+        procd_set_param command chroot /mnt/smoothwan sh -c "service redis-server start && nice -n 19 ntopng -w 4000 -W 0 --offline-mode"
+        procd_close_instance
+}
+
+stop_service()
+{
+        /usr/bin/killall -KILL redis-server
+        /usr/bin/killall -KILL ntopng
+}
