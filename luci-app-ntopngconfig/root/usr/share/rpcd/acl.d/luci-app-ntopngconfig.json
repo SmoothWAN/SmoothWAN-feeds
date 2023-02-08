@@ -1,0 +1,18 @@
+{
+	"luci-app-ntopngconfig": {
+			"description": "Grant UCI access for luci-app-ntopngconfig",
+			"read": {
+					"uci": [ "ntopconf" ]
+			},
+					"file": {
+							"/etc/init.d/ntopngconf start" : [ "exec" ]
+			},
+					"ubus": {
+							"file": [ "read", "list" ],
+							"luci": [ "setInitAction" ]
+			},
+			"write": {
+					"uci": [ "ntopconf" ]
+			}
+	}
+}

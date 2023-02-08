@@ -8,7 +8,6 @@ PKG_MAINTAINER:=TALMASH
 include $(INCLUDE_DIR)/package.mk
 
 define Package/ntopngconf
-  SUBMENU:=VPN
   TITLE:=Custom SmoothWAN ntopng (chroot) configuration
   SECTION:=net
   CATEGORY:=Network

@@ -228,11 +228,11 @@ return view.extend({
                         domainstable,
                         domainAddition,
                         domainAddButton,
-                        E('h3', _('IPv4 addresses')),
+                        E('h3', _('Remote IPv4 addresses')),
                         ipv4table,
                         IPv4Addition,
                         IPv4AddButton,
-                        E('h3', _('IPv6 addresses')),
+                        E('h3', _('Remote IPv6 addresses')),
                         ipv6table,
                         IPv6Addition,
                         IPv6AddButton
