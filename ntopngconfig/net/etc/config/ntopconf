@@ -1,2 +1,2 @@
 config config 'Setup'
-        option enabled '1'
+        option enabled '0'

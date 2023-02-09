@@ -25,7 +25,7 @@ KERNEL_ARCH= `\
 	elif [ "$(ARCH)" == "armeb" ]; then \
 		echo arm; \
 	elif [ "$(ARCH)" == "x86_64" ]; then \
-		echo x86_64; \
+		echo amd64; \
 	elif [ "$(ARCH)" == "i686" ]; then \
 		echo x86; \
 	elif [ "$(ARCH)" == "mips64" ]; then \
