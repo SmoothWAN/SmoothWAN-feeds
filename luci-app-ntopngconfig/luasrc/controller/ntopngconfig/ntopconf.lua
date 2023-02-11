@@ -8,6 +8,9 @@ local i18n = require "luci.i18n"
 
 function index()
      local e = entry({"admin", "services", "ntopconf"}, firstchild(), _("Ntopng"), 20)
+     e.acl_depends = { "luci-app-ntopngconfig" }
+     e.dependent = false
+
      entry({"admin", "services", "ntopconf", "guide"}, call("guidehelp"), _("Guide"), 1)
      entry({"admin", "services", "ntopconf", "config"}, cbi("ntopngconfig/ntopconf"), _("Configuration"), 2)
      entry({"admin", "services", "ntopconf", "logs"}, call("ntopconflog"), _("View Log"), 3)

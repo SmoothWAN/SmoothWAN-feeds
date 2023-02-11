@@ -55,6 +55,7 @@ start_service()
         uci set upnpd.config.external_ip=$(uci get tinyvpnconf.Setup.dstAddr)
         uci set upnpd.config.enabled='1'
         uci commit upnpd
+        ip route add default via 10.202.0.1
 }
 
 stop_service()
