@@ -1,0 +1,3 @@
+[submodule "luci-app-eqos"]
+	path = luci-app-eqos
+	url = https://github.com/SmoothWAN/luci-app-eqos.git
