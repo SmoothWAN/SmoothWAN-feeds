@@ -55,13 +55,12 @@ start_service()
         uci set upnpd.config.external_ip=$(uci get tinyvpnconf.Setup.dstAddr)
         uci set upnpd.config.enabled='1'
         uci commit upnpd
+        service miniupnpd restart
         ip route add default via 10.202.0.1
 }
 
 stop_service()
 {
-        uci set upnpd.config.enabled='0'
-        uci commit upnpd
         killall tinyfecvpn
         if [ $(uci get tinyvpnconf.Setup.enabled) == 1 ]
          then

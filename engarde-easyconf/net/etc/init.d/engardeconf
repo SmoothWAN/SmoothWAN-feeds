@@ -64,12 +64,11 @@ start_service()
         uci set upnpd.config.external_ip=$(uci get engardeconf.Setup.dstAddr)
         uci set upnpd.config.enabled='1'
         uci commit upnpd
+        service miniupnpd restart
 }
 
 stop_service()
 {
-        uci set upnpd.config.enabled='0'
-        uci commit upnpd
         ifdown Engarde
         killall engarde-client
         if [ "$(uci show network.Engarde)" ]; then
