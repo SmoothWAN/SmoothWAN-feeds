@@ -10,7 +10,7 @@ run_tailscale (){
   SUB=$(uci get network.lan.ipaddr | awk -F. '{print $1 "." $2 "." $3 "." "0"}')
   cd /usr/share/tailscale || exit 1
   ./tailscaled -tun br-tailscale0 --state /usr/share/tailscale/tailscaled.state 2> /tmp/tailscaled.log &
-  ./tailscale up --advertise-exit-node --accept-dns=false --advertise-routes="$SUB/24" --reset
+  ./tailscale up --advertise-exit-node --accept-dns=false --advertise-routes="$SUB/24" --reset &
   ./tailscale web --listen=0.0.0.0:8088 &
 }
 
