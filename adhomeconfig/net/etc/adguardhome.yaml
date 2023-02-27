@@ -13,14 +13,14 @@ web_session_ttl: 720
 dns:
   bind_hosts:
   - 0.0.0.0
-  port: 5353
-  statistics_interval: 1
+  port: 53
+  statistics_interval: 0
   querylog_enabled: false
   querylog_file_enabled: true
   querylog_interval: 2160h
   querylog_size_memory: 1000
-  anonymize_client_ip: false
-  protection_enabled: false
+  anonymize_client_ip: true
+  protection_enabled: true
   blocking_mode: default
   blocking_ipv4: ""
   blocking_ipv6: ""
@@ -56,11 +56,11 @@ dns:
   cache_size: 4194304
   cache_ttl_min: 0
   cache_ttl_max: 0
-  cache_optimistic: false
+  cache_optimistic: true
   bogus_nxdomain: []
-  aaaa_disabled: false
+  aaaa_disabled: true
   enable_dnssec: false
-  edns_client_subnet: false
+  edns_client_subnet: true
   max_goroutines: 300
   ipset: []
   filtering_enabled: true
@@ -106,13 +106,13 @@ filters:
 whitelist_filters: []
 user_rules: []
 dhcp:
-  enabled: false
-  interface_name: ""
+  enabled: true
+  interface_name: br-lan
   dhcpv4:
-    gateway_ip: ""
-    subnet_mask: ""
-    range_start: ""
-    range_end: ""
+    gateway_ip: 172.17.17.2
+    subnet_mask: 255.255.255.0
+    range_start: 172.17.17.50
+    range_end: 172.17.17.245
     lease_duration: 86400
     icmp_timeout_msec: 1000
     options: []
