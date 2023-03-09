@@ -3,4 +3,4 @@ echo "Downloading https://releases.ubuntu.com/22.04.1/ubuntu-22.04.1-desktop-amd
 echo "You can observe the speed ramp up time per second."
 echo "You can run this test simultaneously in another windows tab with a different WAN (e.g single carrier multi-modem)"
 echo "---"
-curl --interface "$1" https://releases.ubuntu.com/22.04.1/ubuntu-22.04.1-desktop-amd64.iso -o /dev/null -m 15 2>&1 | stdbuf -oL -eL tr -s '\r' '\n'
+curl -L --interface "$1" https://releases.ubuntu.com/22.04.1/ubuntu-22.04.1-desktop-amd64.iso -o /dev/null -m 15 2>&1 | stdbuf -oL -eL tr -s '\r' '\n'
