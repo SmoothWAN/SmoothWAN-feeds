@@ -41,25 +41,25 @@ start_service()
         psk=$(printf $ckey | openssl dgst -binary -sha256 | openssl base64 -A)
         mkdir /etc/engarde
         echo -e 'client:\n listenAddr: '$listenAddr' \n dstAddr: '$dstAddr' \n excludedInterfaces: \n   - "br-lan"\n   - "Engarde"\n webManager:\n     listenAddr: 0.0.0.0:9001\n' > /etc/engarde/engarde.yml
-        if [ ! "$(uci show network.Engarde)" ]; then
-          uci add_list firewall.cfg03dc81.network='Engarde'
-          uci set network.Engarde=interface
-          uci set network.Engarde.proto='wireguard'
-          uci add network wireguard_Engarde # =cfg115a64
-          uci set network.Engarde.private_key="$ckey"
-          uci add_list network.Engarde.addresses='10.202.0.10'
-          uci set network.Engarde.mtu='1280'
-          uci set network.@wireguard_Engarde[-1].public_key="$spubkey"
-          uci set network.@wireguard_Engarde[-1].preshared_key="$psk"
-          uci add_list network.@wireguard_Engarde[-1].allowed_ips='0.0.0.0/0'
-          uci set network.@wireguard_Engarde[-1].route_allowed_ips='1'
-          uci set network.@wireguard_Engarde[-1].endpoint_host="$(uci get engardeconf.Setup.listenAddr)"
-          uci set network.@wireguard_Engarde[-1].endpoint_port="$(uci get engardeconf.Setup.listenPort)"
-          uci set network.@wireguard_Engarde[-1].persistent_keepalive='25'
-          uci commit firewall
-          uci commit network
-          ifup Engarde
-        fi
+        uci add_list firewall.cfg03dc81.network='wan'
+        uci del_list firewall.cfg03dc81.network='wan'
+        uci del network.wan
+        uci set network.wan=interface
+        uci set network.wan.proto='wireguard'
+        uci add network wireguard_wan # =cfg115a64
+        uci set network.wan.private_key="$ckey"
+        uci add_list network.wan.addresses='10.202.0.10'
+        uci set network.wan.mtu='1280'
+        uci set network.@wireguard_wan[-1].public_key="$spubkey"
+        uci set network.@wireguard_wan[-1].preshared_key="$psk"
+        uci add_list network.@wireguard_wan[-1].allowed_ips='0.0.0.0/0'
+        uci set network.@wireguard_wan[-1].route_allowed_ips='1'
+        uci set network.@wireguard_wan[-1].endpoint_host="$(uci get engardeconf.Setup.listenAddr)"
+        uci set network.@wireguard_wan[-1].endpoint_port="$(uci get engardeconf.Setup.listenPort)"
+        uci set network.@wireguard_wan[-1].persistent_keepalive='25'
+        uci commit firewall
+        uci commit network
+        ifup wan
         screen -L -Logfile /tmp/engarde.log -d -m sh -c "ulimit -n 65535 && nice -n -20 /usr/bin/engarde-client /etc/engarde/engarde.yml"
         uci set upnpd.config.external_ip=$(uci get engardeconf.Setup.dstAddr)
         uci set upnpd.config.enabled='1'
@@ -71,10 +71,10 @@ stop_service()
 {
         ifdown Engarde
         killall engarde-client
-        if [ "$(uci show network.Engarde)" ]; then
+        if [ "$(uci show network.wan)" ]; then
            uci del_list firewall.cfg03dc81.network='Engarde'
-           uci del network.Engarde
-           uci del network.@wireguard_Engarde[-1]
+           uci del network.wan
+           uci del network.@wireguard_wan[-1]
            uci commit firewall
            uci commit network
         fi

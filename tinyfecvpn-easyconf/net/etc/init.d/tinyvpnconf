@@ -38,18 +38,19 @@ start_service()
         fecparam=$(uci get tinyvpnconf.Setup.fecParam)
         subnet=$(uci get tinyvpnconf.Setup.subnet)
 
-        if [ ! "$(uci show network.TinyFEC)" ]; then
-          uci set network.TinyFEC=interface
-          uci set network.TinyFEC.proto='static'
-          uci set network.TinyFEC.device='tinyfec0'
-          uci set network.TinyFEC.ipaddr='10.202.0.2'
-          uci set network.TinyFEC.netmask='255.255.255.0'
-          uci set network.TinyFEC.gateway='10.202.0.1'
-          uci add_list firewall.cfg03dc81.network='TinyFEC'
-          uci commit firewall
-          uci commit network
-          ifup TinyFEC
-        fi
+        uci del network.wan
+        uci set network.wan=interface
+        uci set network.wan.proto='static'
+        uci set network.wan.device='tinyfec0'
+        uci set network.wan.ipaddr='10.202.0.2'
+        uci set network.wan.netmask='255.255.255.0'
+        uci set network.wan.gateway='10.202.0.1'
+        uci del_list firewall.cfg03dc81.network='wan'
+        uci add_list firewall.cfg03dc81.network='wan'
+        uci commit firewall
+        uci commit network
+        ifup wan
+
         ip route add $(uci get tinyvpnconf.Setup.dstAddr)/32 via $(ip route | awk 'NR==1{print $3}')
         screen -L -Logfile /tmp/tinyfecvpn.log -d -m sh -c "ulimit -n 65535 && nice -n -20 /usr/bin/tinyfecvpn -c -r$dstAddr -f$fecparam -k $password --sub-net $subnet --keep-reconnect --tun-mtu 65535 --disable-checksum --disable-obscure --tun-dev tinyfec0"
         uci set upnpd.config.external_ip=$(uci get tinyvpnconf.Setup.dstAddr)
@@ -67,9 +68,9 @@ stop_service()
                 break
         else
         ip route del $(uci get tinyvpnconf.Setup.dstAddr)/32
-        if [ "$(uci show network.TinyFEC)" ]; then
-           uci del_list firewall.cfg03dc81.network='TinyFEC'
-           uci del network.TinyFEC
+        if [ "$(uci show network.wan)" ]; then
+           uci del_list firewall.cfg03dc81.network='wan'
+           uci del network.wan
            uci commit firewall
            uci commit network
            /etc/init.d/network restart
