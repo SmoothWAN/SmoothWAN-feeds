@@ -11,20 +11,74 @@ run_speedify (){
    if [ $(uci get speedifyconf.Setup.enabled) == 0 ]; then
         exit 0
    fi
+
    cd /usr/share/speedify || exit 1
    sh DisableRpFilter.sh
    mkdir -p logs
-   nice -n -20 capsh --drop=cap_sys_nice -- -c './speedify -d logs &'
+
+   if [ $(uci get speedifyconf.Setup.killsw) == 1 ]; then
+      uci del network.wan
+      uci del network.wan.proto='none'
+      uci del network.wan.device='connectify0'
+      uci del_list firewall.cfg03dc81.network='wan'
+      uci del_list dhcp.wan.ra_flags='none'
+
+      uci set network.wan=interface
+      uci set network.wan.proto='static'
+      uci set network.wan.device='connectify0'
+      uci set network.wan.ipaddr='10.202.0.2'
+      uci set network.wan.netmask='255.255.255.0'
+      uci set network.wan.gateway='10.202.0.1'
+      uci add_list firewall.cfg03dc81.network='wan'
+      uci add_list firewall.cfg03dc81.network='wan6'
+      uci set network.wan6=interface
+      uci set network.wan6.proto='dhcpv6'
+      uci set network.wan6.device='connectify0'
+      uci set network.wan6.reqaddress='try'
+      uci set network.wan6.reqprefix='auto'
+      uci commit network
+      uci commit firewall
+      uci commit dhcp
+      ip tuntap add mode tun connectify0
+      ip link set connectify0 mtu 14800
+      nice -n -20 capsh --drop=cap_sys_nice,cap_net_admin -- -c './speedify -d logs &'
+   else
+      uci del network.wan
+      uci del_list firewall.cfg03dc81.network='wan'
+      uci del_list firewall.cfg03dc81.network='wan6'
+      uci del network.wan6
+      uci set network.wan=interface
+      uci set network.wan.proto='none'
+      uci set network.wan.device='connectify0'
+      uci add_list firewall.cfg03dc81.network='wan'
+      uci add_list dhcp.wan.ra_flags='none'
+      uci set dhcp.wan.dhcpv6='relay'
+      uci set dhcp.wan.ndp='relay'
+      uci commit network
+      uci commit firewall
+      uci commit dhcp
+      ip tuntap del mode tun connectify0
+      nice -n -20 capsh --drop=cap_sys_nice -- -c './speedify -d logs &'
+   fi
+
    sleep 2
    ./speedify_cli startupconnect on > /dev/null
+
+   if [ $(uci get speedifyconf.Setup.renamer) == 1 ]; then
+      cp /etc/factoryconfig/99-usbnamer /etc/hotplug.d/net/99-usbnamer
+   else
+      rm /etc/hotplug.d/net/99-usbnamer
+   fi
+  service network restart
 }
 
 parse_versions(){
    APT=$(config_get Setup apt)
    APT=$(echo $APT | sed -e 's/\/$//')
-   echo RepoUser:$APT
+   echo Repository URL:$APT
    aptURL="$APT$SPDDIR"
-   echo ParsedURL:$aptURL
+   echo Repository Ubuntu packages URL:$aptURL
+   echo Note: Duplicated version is the Speedify UI version.
    curl -o $PKGS $aptURL
    cat $PKGS | grep Version
 }
@@ -32,21 +86,21 @@ parse_versions(){
 parse_apt_url(){
    APT=$(config_get Setup apt)
    APT=$(echo $APT | sed -e 's/\/$//')
-   echo RepoUser:$APT
+   echo Repository URL:$APT
    aptURL="$APT$SPDDIR"
-   echo ParsedURL:$aptURL
+   echo Repository Ubuntu packages URL:$aptURL
    curl -o $PKGS $aptURL
 
    DWVER=$(awk '/Version:/{gsub("Version: ", "");print;exit}' $PKGS)
-   echo RepoVer:$DWVER
+   echo Latest Version:$DWVER
 
    SPDDW=$(awk '/Filename/{gsub("Filename: ", "");print;exit}' $PKGS)
    export DWURL=$APT/$SPDDW
-   echo SpdDownloadURL:$DWURL
+   echo Speedify package URL:$DWURL
 
    UIDW=$(sed -n '/speedifyui/{nnnnnnnn;p;q}' $PKGS | awk '/Filename/{gsub("Filename: ", "");print;exit}')
    export UIDWURL=$APT/$UIDW
-   echo UIDownloadURL:$UIDWURL
+   echo Speedify UI package URL:$UIDWURL
 
    if [[ $(config_get Setup verovd) ]]; then
         echo "Version override is set!"
@@ -54,43 +108,43 @@ parse_apt_url(){
         echo "Set to $DWVER"
         SPDDW=$(sed -n '/'"$DWVER"'/{nn;p;q}' $PKGS | awk '/Filename/{gsub("Filename: ", "");print;exit}')
         export DWURL=$APT/$SPDDW
-        echo SpdDownloadURL:$DWURL
+        echo Speedify package URL:$DWURL
         UIDW=$(sed -n '/'"$DWVER"'/{nn;p;q}' $PKGS | awk '/Filename/{gsub("Filename: ", "");print;exit}' | sed 's/speedify/speedifyui/g')
         export UIDWURL=$APT/$UIDW
-        echo UIDownloadURL:$UIDWURL
+        echo Speedify UI package URL:$UIDWURL
    fi
 }
 
 installall(){
    if [ "$(ping -q -c1 google.com &>/dev/null && echo 0 || echo 1)" = "1" ]; then
         echo "Internet connectivity issue. Stopping installation/update"
-        run_speedify
+        run_speedify &
         exit 0
    fi
 
    rm -rf /tmp/spddw
-   echo "Downloading Speedify"
+   echo "Downloading Speedify..."
    wget -P /tmp/spddw/speedify/ "$DWURL"
-   echo "Downloading Speedify UI"
+   echo "Downloading Speedify UI..."
    wget -P /tmp/spddw/speedifyui/ "$UIDWURL"
-   echo "Extracting Speedify"
+   echo "Extracting Speedify..."
    cd /tmp/spddw/speedify/
    ar x *.deb
    tar -xzf data.tar.gz -C /
    mkdir -p /usr/share/speedify/logs
-   echo "Extracting Speedify UI"
+   echo "Extracting Speedify UI..."
    cd /tmp/spddw/speedifyui/
    ar x *.deb
    tar -xzf data.tar.gz -C /
    ln -sf /usr/share/speedifyui/files/* /www/spdui/
-   echo "Deleting download cache"
+   echo "Deleting installation files..."
    rm -rf /tmp/spddw
-   echo "Updating configuration"
+   echo "Updating OpenWrt configration and starting Speedify..."
    uci set speedifyconf.Setup.version=$DWVER
    uci commit
    chmod 755 /etc/init.d/speedifyconf
    /etc/init.d/speedifyconf enable
-   echo "Speedify is installed, UI is now available in Status->Overview"
+   echo "Speedify is now installed, UI is has been installed in Status->Overview"
 }
 
 
