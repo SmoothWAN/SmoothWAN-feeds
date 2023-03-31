@@ -18,17 +18,16 @@ run_speedify (){
 
    if [ $(uci get speedifyconf.Setup.killsw) == 1 ]; then
       uci del network.wan
-      uci del network.wan.proto='none'
-      uci del network.wan.device='connectify0'
-      uci del_list firewall.cfg03dc81.network='wan'
-      uci del_list dhcp.wan.ra_flags='none'
-
+      uci del dhcp.wan6=dhcp
       uci set network.wan=interface
+      uci set network.wan.force_link='0'
       uci set network.wan.proto='static'
       uci set network.wan.device='connectify0'
       uci set network.wan.ipaddr='10.202.0.2'
       uci set network.wan.netmask='255.255.255.0'
       uci set network.wan.gateway='10.202.0.1'
+      uci del_list firewall.cfg03dc81.network='wan'
+      uci del_list firewall.cfg03dc81.network='wan6'
       uci add_list firewall.cfg03dc81.network='wan'
       uci add_list firewall.cfg03dc81.network='wan6'
       uci set network.wan6=interface
@@ -36,24 +35,48 @@ run_speedify (){
       uci set network.wan6.device='connectify0'
       uci set network.wan6.reqaddress='try'
       uci set network.wan6.reqprefix='auto'
+      uci set dhcp.wan6=dhcp
+      uci set dhcp.wan6.interface='wan6'
+      uci set dhcp.wan6.ignore='1'
+      uci set dhcp.wan6.ra='relay'
+      uci set dhcp.wan6.dhcpv6='relay'
+      uci set dhcp.wan6.ndp='relay'
+      uci set dhcp.wan6.master='1'
       uci commit network
       uci commit firewall
       uci commit dhcp
       ip tuntap add mode tun connectify0
-      ip link set connectify0 mtu 14800
+      ip link set connectify0 mtu 14800 up
+      ip route add 10.202.0.0/24 dev connectify0
+      ip route add default via 10.202.0.1
+      ip route add 0.0.0.0/1 dev connectify0 scope link
+      ip route add 128.0.0.0/1 dev connectify0 scope link
+      ip -6 route add 8000::/1 dev connectify0 metric 1 mtu 14800 pref medium
+      ip -6 route add ::/1 dev connectify0 metric 1 mtu 14800 pref medium
       nice -n -20 capsh --drop=cap_sys_nice,cap_net_admin -- -c './speedify -d logs &'
    else
       uci del network.wan
+      uci del network.wan6
       uci del_list firewall.cfg03dc81.network='wan'
       uci del_list firewall.cfg03dc81.network='wan6'
-      uci del network.wan6
+      uci add_list firewall.cfg03dc81.network='wan'
+      uci add_list firewall.cfg03dc81.network='wan6'
       uci set network.wan=interface
       uci set network.wan.proto='none'
       uci set network.wan.device='connectify0'
       uci add_list firewall.cfg03dc81.network='wan'
-      uci add_list dhcp.wan.ra_flags='none'
-      uci set dhcp.wan.dhcpv6='relay'
-      uci set dhcp.wan.ndp='relay'
+      uci set network.wan6=interface
+      uci set network.wan6.proto='dhcpv6'
+      uci set network.wan6.device='connectify0'
+      uci set network.wan6.reqaddress='try'
+      uci set network.wan6.reqprefix='auto'
+      uci set dhcp.wan6=dhcp
+      uci set dhcp.wan6.interface='wan6'
+      uci set dhcp.wan6.ignore='1'
+      uci set dhcp.wan6.ra='relay'
+      uci set dhcp.wan6.dhcpv6='relay'
+      uci set dhcp.wan6.ndp='relay'
+      uci set dhcp.wan6.master='1'
       uci commit network
       uci commit firewall
       uci commit dhcp
@@ -69,7 +92,6 @@ run_speedify (){
    else
       rm /etc/hotplug.d/net/99-usbnamer
    fi
-  service network restart
 }
 
 parse_versions(){
