@@ -20,6 +20,7 @@ start_service()
                 uci commit tinyvpnconf
                 uci commit engardeconf
                 cp /usr/lib/lua/luci/view/admin_status/index.htm.speedify /usr/lib/lua/luci/view/admin_status/index.htm
+                ip route del default dev wan
                 continue
         else
                 exit 0
