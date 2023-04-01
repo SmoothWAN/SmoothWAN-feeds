@@ -20,7 +20,7 @@ dns:
   querylog_interval: 2160h
   querylog_size_memory: 1000
   anonymize_client_ip: true
-  protection_enabled: true
+  protection_enabled: false
   blocking_mode: default
   blocking_ipv4: ""
   blocking_ipv6: ""
@@ -104,7 +104,7 @@ filters:
 whitelist_filters: []
 user_rules: []
 dhcp:
-  enabled: true
+  enabled: false
   interface_name: br-lan
   dhcpv4:
     gateway_ip: 172.17.17.2
