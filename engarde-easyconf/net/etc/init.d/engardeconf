@@ -41,11 +41,13 @@ start_service()
         psk=$(printf $ckey | openssl dgst -binary -sha256 | openssl base64 -A)
         mkdir /etc/engarde
         echo -e 'client:\n listenAddr: '$listenAddr' \n dstAddr: '$dstAddr' \n excludedInterfaces: \n   - "br-lan"\n   - "wan"\n webManager:\n     listenAddr: 0.0.0.0:9001\n' > /etc/engarde/engarde.yml
-        uci add_list firewall.cfg03dc81.network='wan'
         uci del_list firewall.cfg03dc81.network='wan'
+        uci add_list firewall.cfg03dc81.network='wan'
         uci del network.wan
+        uci del network.wan6
         uci set network.wan=interface
         uci set network.wan.proto='wireguard'
+        uci del network wireguard_wan # =cfg115a64
         uci add network wireguard_wan # =cfg115a64
         uci set network.wan.private_key="$ckey"
         uci add_list network.wan.addresses='10.202.0.10'
@@ -69,13 +71,5 @@ start_service()
 
 stop_service()
 {
-        ifdown wan
         killall engarde-client
-        if [ "$(uci show network.wan)" ]; then
-           uci del_list firewall.cfg03dc81.network='wan'
-           uci del network.wan
-           uci del network.@wireguard_wan[-1]
-           uci commit firewall
-           uci commit network
-        fi
 }

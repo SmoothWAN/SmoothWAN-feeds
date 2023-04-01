@@ -50,7 +50,7 @@ start_service()
         uci commit firewall
         uci commit network
         ifup wan
-
+        ip route del $(uci get tinyvpnconf.Setup.dstAddr)/32
         ip route add $(uci get tinyvpnconf.Setup.dstAddr)/32 via $(ip route | awk 'NR==1{print $3}')
         screen -L -Logfile /tmp/tinyfecvpn.log -d -m sh -c "ulimit -n 65535 && nice -n -20 /usr/bin/tinyfecvpn -c -r$dstAddr -f$fecparam -k $password --sub-net $subnet --keep-reconnect --tun-mtu 65535 --disable-checksum --disable-obscure --tun-dev tinyfec0"
         uci set upnpd.config.external_ip=$(uci get tinyvpnconf.Setup.dstAddr)
@@ -63,17 +63,4 @@ start_service()
 stop_service()
 {
         killall tinyfecvpn
-        if [ $(uci get tinyvpnconf.Setup.enabled) == 1 ]
-         then
-                break
-        else
-        ip route del $(uci get tinyvpnconf.Setup.dstAddr)/32
-        if [ "$(uci show network.wan)" ]; then
-           uci del_list firewall.cfg03dc81.network='wan'
-           uci del network.wan
-           uci commit firewall
-           uci commit network
-           /etc/init.d/network restart
-        fi
-        fi
 }
