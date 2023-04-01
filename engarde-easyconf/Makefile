@@ -62,21 +62,16 @@ endef
 define Build/Compile
 	( \
 		pushd $(PKG_BUILD_DIR) ; \
-		cd webmanager ; \
-		npm install ; \
-		npm run build ; \
-		cd .. ; \
-		make packr ; \
-		CGO_ENABLED=0 GOOS=linux GOARCH=$(KERNEL_ARCH) ./build-scripts/build.sh server ; \
-		CGO_ENABLED=0 GOOS=linux GOARCH=$(KERNEL_ARCH) ./build-scripts/build.sh client ; \
+		wget https://github.com/SmoothWAN/engarde/releases/download/master/engarde-client.linux.$(KERNEL_ARCH) ;\
+		wget https://github.com/SmoothWAN/engarde/releases/download/master/engarde-server.linux.$(KERNEL_ARCH) ;\
 		popd ; \
 	)
 endef
 
 define Package/engarde-easyconf/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/dist/linux/$(KERNEL_ARCH)/engarde-client.linux.$(KERNEL_ARCH) $(1)/usr/bin/engarde-client
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/dist/linux/$(KERNEL_ARCH)/engarde-server.linux.$(KERNEL_ARCH) $(1)/usr/bin/engarde-server
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/engarde-client.linux.$(KERNEL_ARCH) $(1)/usr/bin/engarde-client
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/engarde-server.linux.$(KERNEL_ARCH) $(1)/usr/bin/engarde-server
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_DATA) ./net/etc/config/engardeconf $(1)/etc/config/engardeconf
 	$(INSTALL_DIR) $(1)/etc/init.d
