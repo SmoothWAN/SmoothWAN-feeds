@@ -92,7 +92,7 @@ run_speedify (){
    else
       rm /etc/hotplug.d/net/99-usbnamer
    fi
-   service adguardhome restart &
+   /etc/init.d/adguardhome restart &
 }
 
 parse_versions(){
