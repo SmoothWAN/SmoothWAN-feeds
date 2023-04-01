@@ -40,7 +40,7 @@ start_service()
         cpubkey=$(echo $ckey | wg pubkey)
         psk=$(printf $ckey | openssl dgst -binary -sha256 | openssl base64 -A)
         mkdir /etc/engarde
-        echo -e 'client:\n listenAddr: '$listenAddr' \n dstAddr: '$dstAddr' \n excludedInterfaces: \n   - "br-lan"\n   - "Engarde"\n webManager:\n     listenAddr: 0.0.0.0:9001\n' > /etc/engarde/engarde.yml
+        echo -e 'client:\n listenAddr: '$listenAddr' \n dstAddr: '$dstAddr' \n excludedInterfaces: \n   - "br-lan"\n   - "wan"\n webManager:\n     listenAddr: 0.0.0.0:9001\n' > /etc/engarde/engarde.yml
         uci add_list firewall.cfg03dc81.network='wan'
         uci del_list firewall.cfg03dc81.network='wan'
         uci del network.wan
@@ -64,15 +64,15 @@ start_service()
         uci set upnpd.config.external_ip=$(uci get engardeconf.Setup.dstAddr)
         uci set upnpd.config.enabled='1'
         uci commit upnpd
-        service miniupnpd restart
+        /etc/init.d/miniupnpd restart
 }
 
 stop_service()
 {
-        ifdown Engarde
+        ifdown wan
         killall engarde-client
         if [ "$(uci show network.wan)" ]; then
-           uci del_list firewall.cfg03dc81.network='Engarde'
+           uci del_list firewall.cfg03dc81.network='wan'
            uci del network.wan
            uci del network.@wireguard_wan[-1]
            uci commit firewall
