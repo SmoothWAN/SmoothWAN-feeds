@@ -17,8 +17,12 @@ run_speedify (){
    mkdir -p logs
 
    if [ $(uci get speedifyconf.Setup.killsw) == 1 ]; then
+      ifdown wan
+      ifdown wan6
       uci del network.wan
       uci del dhcp.wan6=dhcp
+      uci del network.wan6
+      uci commit network
       uci set network.wan=interface
       uci set network.wan.force_link='0'
       uci set network.wan.proto='static'
@@ -55,15 +59,22 @@ run_speedify (){
       ip -6 route add ::/1 dev connectify0 metric 1 mtu 14800 pref medium
       nice -n -20 capsh --drop=cap_sys_nice,cap_net_admin -- -c './speedify -d logs &'
    else
+      ifdown wan
+      ifdown wan6
       uci del network.wan
       uci del network.wan6
+      uci commit network
       uci del_list firewall.cfg03dc81.network='wan'
       uci del_list firewall.cfg03dc81.network='wan6'
       uci add_list firewall.cfg03dc81.network='wan'
       uci add_list firewall.cfg03dc81.network='wan6'
       uci set network.wan=interface
-      uci set network.wan.proto='none'
+      uci set network.wan.force_link='0'
+      uci set network.wan.proto='static'
       uci set network.wan.device='connectify0'
+      uci set network.wan.ipaddr='10.202.0.2'
+      uci set network.wan.netmask='255.255.255.0'
+      uci set network.wan.gateway='10.202.0.1'
       uci add_list firewall.cfg03dc81.network='wan'
       uci set network.wan6=interface
       uci set network.wan6.proto='dhcpv6'
@@ -80,11 +91,11 @@ run_speedify (){
       uci commit network
       uci commit firewall
       uci commit dhcp
-      ip tuntap del mode tun connectify0
       nice -n -20 capsh --drop=cap_sys_nice -- -c './speedify -d logs &'
    fi
-
-   sleep 2
+   ifup wan
+   ifup wan6
+  sleep 2
    ./speedify_cli startupconnect on > /dev/null
 
    if [ $(uci get speedifyconf.Setup.renamer) == 1 ]; then
