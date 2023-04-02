@@ -51,12 +51,6 @@ run_speedify (){
       uci commit dhcp
       ip tuntap add mode tun connectify0
       ip link set connectify0 mtu 14800 up
-      ip route add 10.202.0.0/24 dev connectify0
-      ip route add default via 10.202.0.1
-      ip route add 0.0.0.0/1 dev connectify0 scope link
-      ip route add 128.0.0.0/1 dev connectify0 scope link
-      ip -6 route add 8000::/1 dev connectify0 metric 1 mtu 14800 pref medium
-      ip -6 route add ::/1 dev connectify0 metric 1 mtu 14800 pref medium
       nice -n -20 capsh --drop=cap_sys_nice,cap_net_admin -- -c './speedify -d logs &'
    else
       ifdown wan
