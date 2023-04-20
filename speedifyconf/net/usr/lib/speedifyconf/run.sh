@@ -34,6 +34,7 @@ run_speedify (){
       uci del_list firewall.cfg03dc81.network='wan6'
       uci add_list firewall.cfg03dc81.network='wan'
       uci add_list firewall.cfg03dc81.network='wan6'
+      uci set firewall.cfg03dc81.input='REJECT'
       uci set network.wan6=interface
       uci set network.wan6.proto='dhcpv6'
       uci set network.wan6.device='connectify0'
@@ -62,6 +63,7 @@ run_speedify (){
       uci del_list firewall.cfg03dc81.network='wan6'
       uci add_list firewall.cfg03dc81.network='wan'
       uci add_list firewall.cfg03dc81.network='wan6'
+      uci set firewall.cfg03dc81.input='REJECT'
       uci set network.wan=interface
       uci set network.wan.force_link='0'
       uci set network.wan.proto='static'
@@ -69,7 +71,6 @@ run_speedify (){
       uci set network.wan.ipaddr='10.202.0.2'
       uci set network.wan.netmask='255.255.255.0'
       uci set network.wan.gateway='10.202.0.1'
-      uci add_list firewall.cfg03dc81.network='wan'
       uci set network.wan6=interface
       uci set network.wan6.proto='dhcpv6'
       uci set network.wan6.device='connectify0'
