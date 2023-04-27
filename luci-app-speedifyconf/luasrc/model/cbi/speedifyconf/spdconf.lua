@@ -2,6 +2,7 @@ config = Map("speedifyconf")
 
 view = config:section(NamedSection,"Setup", "config",  translate("Speedify Configuration"), translate("Check the log tab for installation progress."))
 enabled = view:option(Flag, "enabled", "Enable", "Enables Speedify, disabling Engarde and TinyFEC VPN."); view.optional=false; view.rmempty = false;
+logpath = view:option(Value, "logpath", "Log Directory", "Logs directory for speedify logs"); view.optional=false; view.rmempty = false;
 apt = view:option(Value, "apt", "Repository URL:", "Default address last tested on Q1 2023."); view.optional=false; view.rmempty = false;
 auto = view:option(Flag, "autoupdate", "Update on boot:", "Update Speedify before starting."); view.optional=false; view.rmempty = false;
 upd = view:option(Button, "_update", "Trigger Install/Update", "Install Speedify or update and restart.")
