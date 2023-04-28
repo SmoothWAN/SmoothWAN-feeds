@@ -14,7 +14,9 @@ run_speedify (){
 
    cd /usr/share/speedify || exit 1
    sh DisableRpFilter.sh
-   mkdir -p logs
+   LOGPATH=$(uci -q get speedifyconf.Setup.logpath)
+   LOGPATH=${LOGPATH:-logs}
+   mkdir -p ${LOGPATH}
 
    if [ $(uci get speedifyconf.Setup.killsw) == 1 ]; then
       ifdown wan
@@ -52,7 +54,7 @@ run_speedify (){
       uci commit dhcp
       ip tuntap add mode tun connectify0
       ip link set connectify0 mtu 14800 up
-      nice -n -20 capsh --drop=cap_sys_nice,cap_net_admin -- -c './speedify -d logs &'
+      nice -n -20 capsh --drop=cap_sys_nice,cap_net_admin -- -c "./speedify -d ${LOGPATH} &"
    else
       ifdown wan
       ifdown wan6
@@ -86,7 +88,7 @@ run_speedify (){
       uci commit network
       uci commit firewall
       uci commit dhcp
-      nice -n -20 capsh --drop=cap_sys_nice -- -c './speedify -d logs &'
+      nice -n -20 capsh --drop=cap_sys_nice -- -c "./speedify -d ${LOGPATH} &"
    fi
    ifup wan
    ifup wan6
