@@ -1,7 +1,7 @@
 config config 'Setup'
         option listenAddr "127.0.0.1"
         option listenPort "65530"
-        option dstAddr "123.123.123.123"
+        option dstAddr "10.0.99.1"
         option dstPort "65531"
         option pass "none"
         option enabled "0"
