@@ -15,9 +15,6 @@ start_service()
 {
         if [ $(uci get ntopconf.Setup.enabled) == 1 ]
          then
-                echo 200000000 > /sys/block/zram0/disksize
-                mkswap /dev/zram0
-                swapon /dev/zram0
                 mkdir /mnt/smoothwan
                 mount /usr/lib/chroot/smoothwan.img /mnt/smoothwan
                 mount --bind /dev /mnt/smoothwan/dev
